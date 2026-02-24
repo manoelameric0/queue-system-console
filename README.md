@@ -27,7 +27,7 @@ separação de responsabilidades (arquitetura em camadas) e implementação de r
 
 - Queue (FIFO)
 - Stack (LIFO)
-- Separação em camadas (Models, Services, Interfaces)
+- Separação em camadas (Models, Services, Repositories)
 - Isolamento de regra de negócio
 - Tratamento de exceções
 - Uso de Enum
@@ -48,13 +48,11 @@ QueueSystem
 │
 ├── Services
 │   └── QueueService.cs
+│   └── IQueueService.cs
 │
-├── Repository
+├── Repositories
 │   └── IQueueRepository.cs
 │   └── InMemoryQueueRepository.cs
-│
-├── Interfaces
-│   └── IQueueService.cs
 │
 └── Program.cs
 ```
