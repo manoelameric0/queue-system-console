@@ -11,9 +11,14 @@ public class Client
 
     public Client(string name, int id,int clientType, DateTime? enQueueTime)
     {
-        if (string.IsNullOrWhiteSpace(name) && name.Count() < 3)
+        if (string.IsNullOrWhiteSpace(name) && name.Length < 3)
         {
             throw new ArgumentException("Nome Inválido!!!");
+        }
+
+        if (name.Any(char.IsDigit))
+        {
+            throw new ArgumentException("O nome não pode conter Numeros!!!");
         }
 
         if (id <= 0)
