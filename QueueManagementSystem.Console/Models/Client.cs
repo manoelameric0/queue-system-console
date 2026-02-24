@@ -6,10 +6,10 @@ public class Client
 {
     string Name {get;}
     int ID {get;} = 0;
-    bool Priority;
-    DateTime EnQueueTime;
+    int ClientType;
+    DateTime? EnQueueTime;
 
-    public Client(string name, int id,bool priority, DateTime enQueueTime)
+    public Client(string name, int id,int clientType, DateTime? enQueueTime)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -26,14 +26,14 @@ public class Client
             throw new ArgumentException("Hora de Chegada Inválida!!!");
         }
 
-        if (priority == null)
+        if (clientType < 0 && clientType > 1)
         {
-            throw new ArgumentException("Prioridade Inválida!!!");
+            throw new ArgumentException("Tipo Inválido");
         }
 
         Name = name;
         ID += id;
-        Priority = priority;
+        ClientType = clientType;
         EnQueueTime = enQueueTime;
     }
 }
