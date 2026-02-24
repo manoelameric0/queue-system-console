@@ -11,7 +11,7 @@ public class Client
 
     public Client(string name, int id,int clientType, DateTime? enQueueTime)
     {
-        if (string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(name) && name.Count() < 3)
         {
             throw new ArgumentException("Nome Inválido!!!");
         }
