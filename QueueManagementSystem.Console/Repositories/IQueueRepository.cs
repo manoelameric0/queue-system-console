@@ -10,6 +10,6 @@ namespace QueueManagementSystem.Console.Repositories;
 public interface IQueueRepository
 {
     void Add(Client client);
-    void Remove(Client client);
+    void Remove();
     IEnumerable<Client> GetAll();
 }
