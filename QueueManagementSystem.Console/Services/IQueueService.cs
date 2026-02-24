@@ -1,14 +1,15 @@
 using System;
+using QueueManagementSystem.Console.Enums;
 using QueueManagementSystem.Console.Models;
 
 namespace QueueManagementSystem.Console.Services;
 
 public interface IQueueService
 {
-    string Add(string Name);
+    void Add(string Name, ClientType type);
     Client CallNext();
-    Stack<Client> UndoLastCall();
-    List<Client> GetQueues();
-    Stack<Client> GetClients();
+    void UndoLastCall();
+    IEnumerable<Client> GetClients();
+    IEnumerable<Client> GetHistory();
 
 }
