@@ -5,16 +5,16 @@ namespace QueueManagementSystem.Console.Repositories;
 
 public class InMemoryQueueRepository:IQueueRepository
 {
-    private readonly Queue<Client> _clientQueue = new();
+    private readonly List<Client> _clientQueue = new();
 
     public void Add(Client client)
     {
-        _clientQueue.Enqueue(client);
+        _clientQueue.Add(client);
     }
 
     public void Remove()
     {
-        _clientQueue.Dequeue();
+        _clientQueue.Remove(_clientQueue.FirstOrDefault());
     }
 
     public IEnumerable<Client> GetAll()
