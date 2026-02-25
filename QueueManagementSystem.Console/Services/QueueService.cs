@@ -24,7 +24,7 @@ public class QueueService : IQueueService
     {
         if (_repository.GetAll().Any(c => string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase)))
         {
-           throw new ArgumentException("Cliente já está na Fila");
+            throw new ArgumentException("Cliente já está na Fila");
         }
 
         if (name.Any(char.IsDigit))
@@ -32,54 +32,81 @@ public class QueueService : IQueueService
             throw new ArgumentException("Nome inválido não é permitido numero no nome do cliente!!!");
         }
 
-        
+
 
         //adiciona os cliente Comuns
         if (type == ClientType.Comum)
         {
-            _normalQueue.Enqueue(new Client (name:name, clientType:type,enQueueTime:DateTime.Now));
+            _normalQueue.Enqueue(new Client(name: name, clientType: type, enQueueTime: DateTime.Now));
         }
 
         //adiciona  os clientes Prioridade
         if (type == ClientType.Prioridade)
         {
-            _PreferentialQueue.Enqueue(new Client (name:name, clientType:type,enQueueTime:DateTime.Now));
+            _PreferentialQueue.Enqueue(new Client(name: name, clientType: type, enQueueTime: DateTime.Now));
         }
 
         //adiciona todos os clientes no repository
         _repository.Add(new Client
-        (name:name, clientType:type, enQueueTime:DateTime.Now));
+        (name: name, clientType: type, enQueueTime: DateTime.Now));
 
     }
 
     public Client? CallNext()
     {
-        
-        if (_normalQueue == null && _PreferentialQueue == null)
+
+        if (!_normalQueue.Any() && !_PreferentialQueue.Any())
         {
             throw new ArgumentException("Nenhum Cliente em Espera");
         }
-        
+
         var client = RemoveQueues();
         return client;
 
     }
 
-    public void UndoLastCall()
+    public Client? UndoLastCall()
     {
-        if (_history == null)
+        if (!_history.Any())
         {
             throw new ArgumentException("Nenhum Cliente Atendido Até o Momento!!!");
         }
+
+        var client = _history.FirstOrDefault();
+
+        return client!;
+
     }
+
+    public IEnumerable<Client>? GetClients()
+    {
+        if (!_normalQueue.Any() && !_PreferentialQueue.Any())
+        {
+            throw new ArgumentException("Nenhum Cliente Atendido Até o Momento!!!");
+        }
+
+        var clients = new Queue<Client>(_normalQueue.Concat(_PreferentialQueue).OrderByDescending(c => c.EnQueueTime));
+
+        return clients;
+    }
+
+    public IEnumerable<Client>? GetHistory()
+    {
+        if (!_history.Any())
+        {
+            throw new ArgumentException("Nenhum Cliente Atendido Até o Momento!!!");
+        }
+
+        return _history;
+    } 
 
     Client? RemoveQueues()
     {
-        
+
         Client? client = null;
         if (contador <= 3)
         {
-            var filaFinal = new Queue<Client> (_normalQueue.Concat(_PreferentialQueue).OrderByDescending(c => c.EnQueueTime));
+            var filaFinal = new Queue<Client>(_normalQueue.Concat(_PreferentialQueue).OrderByDescending(c => c.EnQueueTime));
 
             filaFinal.TryDequeue(out client);
 
@@ -101,13 +128,13 @@ public class QueueService : IQueueService
                 return client;
             }
         }
-        
+
         if (contador == 3)
         {
-             
-             _PreferentialQueue.TryDequeue(out client);
-             _history.Push(client!);
-             contador = 0;
+
+            _PreferentialQueue.TryDequeue(out client);
+            _history.Push(client!);
+            contador = 0;
         }
 
         return client;
