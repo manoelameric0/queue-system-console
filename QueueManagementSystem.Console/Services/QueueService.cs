@@ -38,16 +38,24 @@ public class QueueService : IQueueService
 
     }
 
-    Client? CallNext()
+    public Client? CallNext()
     {
-        
-        _repository.Remove();
-    
+        if(_repository.GetAll().FirstOrDefault() != null)
+        {
+            _history.Push(_repository.GetAll().FirstOrDefault()!);
+        }
 
-        var orderByID = _repository.GetAll();
-        Client? client = orderByID.FirstOrDefault();
+        _repository.Remove();
+
+        
+        Client? client = _repository.GetAll().FirstOrDefault();
 
         return client;
 
+    }
+
+    public void UndoLastCall()
+    {
+        
     }
 }
