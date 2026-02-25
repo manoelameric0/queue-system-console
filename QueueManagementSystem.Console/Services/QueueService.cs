@@ -20,10 +20,19 @@ public class QueueService : IQueueService
 
     public void Add(string name, ClientType type)
     {
-        if (_repository.GetAll().Equals(c))
+        if (_repository.GetAll().Any(c => string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase)))
         {
-            
-        }        
+           throw new ArgumentException("Cliente já está na Fila");
+        }
+
+        if (name.Any(char.IsDigit))
+        {
+            throw new ArgumentException("Nome inválido não é permitido numero no nome do cliente!!!");
+        }
+
+        contador++;
+
+        _repository.Add(new Client(name:name, clientType:(int)type,id:contador, enQueueTime:DateTime.Now) );
 
     }
 
