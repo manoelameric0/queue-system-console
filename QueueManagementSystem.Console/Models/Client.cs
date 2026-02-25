@@ -5,11 +5,11 @@ namespace QueueManagementSystem.Console.Models;
 public class Client
 {
     public string Name {get;}
-    public int ID {get;} = 0;
+    public Guid ID {get;}
     public int ClientType {get;}
     public DateTime? EnQueueTime;
 
-    public Client(string name, int id,int clientType, DateTime? enQueueTime)
+    public Client(string name,int clientType, DateTime? enQueueTime)
     {
         if (string.IsNullOrWhiteSpace(name) && name.Length < 3)
         {
@@ -19,11 +19,6 @@ public class Client
         if (name.Any(char.IsDigit))
         {
             throw new ArgumentException("O nome não pode conter Numeros!!!");
-        }
-
-        if (id <= 0)
-        {
-            throw new ArgumentException("ID Inválido!!!");
         }
 
         if (enQueueTime == null)
@@ -37,7 +32,7 @@ public class Client
         }
 
         Name = name;
-        ID += id;
+        ID = Guid.NewGuid();
         ClientType = clientType;
         EnQueueTime = enQueueTime;
     }
