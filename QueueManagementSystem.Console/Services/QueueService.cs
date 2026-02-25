@@ -101,6 +101,14 @@ public class QueueService : IQueueService
 
         var client = _history.FirstOrDefault();
 
+        if (client!.ClientType == ClientType.Comum)
+        {
+            _normalQueue = new Queue<Client>(new[] {client}.Concat(_normalQueue));
+        }else
+        {
+            _PreferentialQueue = new Queue<Client>(new[] {client}.Concat(_PreferentialQueue));
+        }
+
         return client!;
 
     }
