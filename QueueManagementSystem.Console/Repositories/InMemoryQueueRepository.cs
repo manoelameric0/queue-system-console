@@ -18,7 +18,6 @@ public class InMemoryQueueRepository:IQueueRepository
     }
 
     public IEnumerable<Client> GetAll()
-    {
-        return _clientQueue;
-    }
+     => _clientQueue;
+    
 }
