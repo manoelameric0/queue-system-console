@@ -32,55 +32,35 @@ public class QueueService : IQueueService
             throw new ArgumentException("Nome inválido não é permitido numero no nome do cliente!!!");
         }
 
-        if (contador < 3) contador++;
+        
 
         //adiciona os cliente Comuns
         if (type == ClientType.Comum)
         {
-            _normalQueue.Enqueue(new Client (name:name, clientType:(int)type,enQueueTime:DateTime.Now));
+            _normalQueue.Enqueue(new Client (name:name, clientType:type,enQueueTime:DateTime.Now));
         }
 
         //adiciona  os clientes Prioridade
         if (type == ClientType.Prioridade)
         {
-            _PreferentialQueue.Enqueue(new Client (name:name, clientType:(int)type,enQueueTime:DateTime.Now));
+            _PreferentialQueue.Enqueue(new Client (name:name, clientType:type,enQueueTime:DateTime.Now));
         }
 
         //adiciona todos os clientes no repository
         _repository.Add(new Client
-        (name:name, clientType:(int)type, enQueueTime:DateTime.Now));
+        (name:name, clientType:type, enQueueTime:DateTime.Now));
 
     }
 
     public Client? CallNext()
     {
-        Client? client = null;
-        if (contador == 3) _PreferentialQueue.TryDequeue(out client);
         
-
-        if (contador < 3)
-        {
-            var filaFinal = new Queue<Client> (_normalQueue.Concat(_PreferentialQueue).OrderByDescending(c => c.EnQueueTime));
-
-            var clientOrderned = filaFinal.Dequeue();
-
-            
-
-
-        }
-
         if (_normalQueue == null && _PreferentialQueue == null)
         {
             throw new ArgumentException("Nenhum Cliente em Espera");
         }
         
-        if(_repository.GetAll().FirstOrDefault() != null)
-        {
-            _history.Push(_repository.GetAll().FirstOrDefault()!);
-        }
-
-        
-
+        var client = RemoveQueues();
         return client;
 
     }
@@ -91,6 +71,47 @@ public class QueueService : IQueueService
         {
             throw new ArgumentException("Nenhum Cliente Atendido Até o Momento!!!");
         }
+    }
+
+    Client? RemoveQueues()
+    {
+        
+        Client? client = null;
+        if (contador <= 3)
+        {
+            var filaFinal = new Queue<Client> (_normalQueue.Concat(_PreferentialQueue).OrderByDescending(c => c.EnQueueTime));
+
+            filaFinal.TryDequeue(out client);
+
+            if (client!.ClientType == ClientType.Comum)
+            {
+                _normalQueue.Dequeue();
+                _history.Push(client);
+                contador++;
+
+                return client;
+            }
+
+            if (client!.ClientType == ClientType.Prioridade)
+            {
+                _PreferentialQueue.Dequeue();
+                _history.Push(client!);
+                contador = 0;
+
+                return client;
+            }
+        }
+        
+        if (contador == 3)
+        {
+             
+             _PreferentialQueue.TryDequeue(out client);
+             _history.Push(client!);
+             contador = 0;
+        }
+
+        return client;
+
     }
 
 
