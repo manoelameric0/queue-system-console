@@ -32,23 +32,54 @@ public class QueueService : IQueueService
             throw new ArgumentException("Nome inválido não é permitido numero no nome do cliente!!!");
         }
 
-        contador++;
+        if (contador < 3) contador++;
 
-        _repository.Add(new Client(name:name, clientType:(int)type,id:contador, enQueueTime:DateTime.Now) );
+        //adiciona os cliente Comuns
+        if (type == ClientType.Comum)
+        {
+            _normalQueue.Enqueue(new Client (name:name, clientType:(int)type,enQueueTime:DateTime.Now));
+        }
+
+        //adiciona  os clientes Prioridade
+        if (type == ClientType.Prioridade)
+        {
+            _PreferentialQueue.Enqueue(new Client (name:name, clientType:(int)type,enQueueTime:DateTime.Now));
+        }
+
+        //adiciona todos os clientes no repository
+        _repository.Add(new Client
+        (name:name, clientType:(int)type, enQueueTime:DateTime.Now));
 
     }
 
     public Client? CallNext()
     {
+        Client? client = null;
+        if (contador == 3) _PreferentialQueue.TryDequeue(out client);
+        
+
+        if (contador < 3)
+        {
+            var filaFinal = new Queue<Client> (_normalQueue.Concat(_PreferentialQueue).OrderByDescending(c => c.EnQueueTime));
+
+            var clientOrderned = filaFinal.Dequeue();
+
+            
+
+
+        }
+
+        if (_normalQueue == null && _PreferentialQueue == null)
+        {
+            throw new ArgumentException("Nenhum Cliente em Espera");
+        }
+        
         if(_repository.GetAll().FirstOrDefault() != null)
         {
             _history.Push(_repository.GetAll().FirstOrDefault()!);
         }
 
-        _repository.Remove();
-
         
-        Client? client = _repository.GetAll().FirstOrDefault();
 
         return client;
 
@@ -56,6 +87,11 @@ public class QueueService : IQueueService
 
     public void UndoLastCall()
     {
-        
+        if (_history == null)
+        {
+            throw new ArgumentException("Nenhum Cliente Atendido Até o Momento!!!");
+        }
     }
+
+
 }
