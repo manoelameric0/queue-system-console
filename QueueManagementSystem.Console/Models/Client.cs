@@ -1,4 +1,5 @@
 using System;
+using QueueManagementSystem.Console.Enums;
 
 namespace QueueManagementSystem.Console.Models;
 
@@ -6,10 +7,10 @@ public class Client
 {
     public string Name {get;}
     public Guid ID {get;}
-    public int ClientType {get;}
+    public ClientType ClientType {get;}
     public DateTime? EnQueueTime;
 
-    public Client(string name,int clientType, DateTime? enQueueTime)
+    public Client(string name,ClientType clientType, DateTime? enQueueTime)
     {
         if (string.IsNullOrWhiteSpace(name) && name.Length < 3)
         {
@@ -26,7 +27,7 @@ public class Client
             throw new ArgumentException("Hora de Chegada Inválida!!!");
         }
 
-        if (clientType < 0 && clientType > 1)
+        if (clientType != ClientType.Prioridade && clientType != ClientType.Comum)
         {
             throw new ArgumentException("Tipo Inválido");
         }
