@@ -4,10 +4,10 @@ namespace QueueManagementSystem.Console.Models;
 
 public class Client
 {
-    string Name {get;}
-    int ID {get;} = 0;
-    int ClientType;
-    DateTime? EnQueueTime;
+    public string Name {get;}
+    public int ID {get;} = 0;
+    public int ClientType {get;}
+    public DateTime? EnQueueTime;
 
     public Client(string name, int id,int clientType, DateTime? enQueueTime)
     {
