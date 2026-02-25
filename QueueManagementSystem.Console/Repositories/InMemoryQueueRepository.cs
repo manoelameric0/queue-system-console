@@ -14,7 +14,7 @@ public class InMemoryQueueRepository:IQueueRepository
 
     public void Remove()
     {
-        _clientQueue.Remove(_clientQueue.FirstOrDefault());
+        _clientQueue.Remove(_clientQueue.FirstOrDefault()!);
     }
 
     public IEnumerable<Client> GetAll()
