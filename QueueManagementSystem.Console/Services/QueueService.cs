@@ -84,9 +84,7 @@ public class QueueService : IQueueService
 
         var filaFinal = new Queue<Client>(_normalQueue.Concat(_PreferentialQueue).OrderByDescending(c => c.EnQueueTime));
         filaFinal.TryDequeue(out client);
-
-        client = AddHistoryCommom(client!);
-        client = AddHistoryPriority(client!);
+        AddHistory(client!);
 
         return client;
 
@@ -135,30 +133,21 @@ public class QueueService : IQueueService
         return _history;
     }
 
-    Client AddHistoryCommom(Client? client)
+    void AddHistory(Client? client)
     {
         if (client!.ClientType == ClientType.Comum)
         {
             _normalQueue.TryDequeue( out client!);
             _history.Push(client!);
             contador++;
-
-            return client;
         }
 
-        return client;
-    }
-    Client AddHistoryPriority(Client? client)
-    {
         if (client!.ClientType == ClientType.Prioridade)
         {
             _PreferentialQueue.TryDequeue(out client!);
             _history.Push(client!);
             contador = 0;
-
-            return client;
         }
-
-        return client;
     }
+    
 }
