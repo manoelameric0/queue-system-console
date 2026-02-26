@@ -66,6 +66,9 @@ public class Menu
                         System.Console.WriteLine($"Error: {ex.Message}");
                     }
                     break;
+
+                case MenuOption.Exit:
+                    return;
                 default:
                     System.Console.WriteLine("\nOpção Inválida!\n");
                     break;
