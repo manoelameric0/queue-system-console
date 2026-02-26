@@ -7,9 +7,9 @@ namespace QueueManagementSystem.Console.UI;
 
 public class Menu
 {
-    public void Executar()
+    public void Executar(IQueueService service)
     {
-        IQueueService service = new QueueService();
+        
         while (true)
         {
             //MENU RUNNING
@@ -126,10 +126,6 @@ public class Menu
     static void CallNext(IQueueService service) => service.CallNext();
 
     static void UndoLastCall(IQueueService service) => service.UndoLastCall();
-
-
-
-
 
     static void DisplayHistoryClients(IQueueService service)
     {
