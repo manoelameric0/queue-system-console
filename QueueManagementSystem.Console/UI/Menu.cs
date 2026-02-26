@@ -1,4 +1,5 @@
 using System;
+using QueueManagementSystem.Console.Enums;
 using QueueManagementSystem.Console.Models;
 using QueueManagementSystem.Console.Services;
 
@@ -28,12 +29,91 @@ public class Menu
             System.Console.WriteLine("----------------------------------------");
             System.Console.WriteLine("");
             System.Console.Write("Digite sua escolha: ");
+            var input = ReadInt();
 
-            if (true)
+            MenuOption menu = (MenuOption)input;
+            switch (menu)
             {
+                case MenuOption.Add:
+                    try
+                    {
+                        AddClient(service);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        System.Console.WriteLine($"\nError: {ex.Message}");
+                    }
+                    break;
 
+                case MenuOption.CallNext:
+                    try
+                    {
+                        CallNext(service);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        System.Console.WriteLine($"\nError: {ex.Message}");
+                    }
+                    break;
+                default:
+                    System.Console.WriteLine("\nOpção Inválida!\n");
+                    break;
             }
 
         }
+
+
+    }
+    //validações
+    static int ReadInt()
+    {
+        int option;
+        while (!int.TryParse(System.Console.ReadLine(), out option))
+        {
+            System.Console.WriteLine("Caráctere inválido");
+        }
+
+        return option;
+    }
+
+    static string ReadString()
+    {
+        string input = System.Console.ReadLine();
+        while (string.IsNullOrWhiteSpace(input) || input.Any(char.IsDigit) || int.TryParse(input, out int a))
+        {
+            System.Console.WriteLine("Valor inválido!!!");
+            System.Console.Write("Digite o nome do cliente: ");
+            input = System.Console.ReadLine();
+
+        }
+
+        return input;
+    }
+
+    //Ações de Console
+    static void AddClient(IQueueService service)
+    {
+        System.Console.WriteLine("========================================");
+        System.Console.WriteLine("         ADICIONAR CLIENTE");
+        System.Console.WriteLine("========================================");
+        System.Console.WriteLine("");
+        System.Console.Write("Digite o nome do cliente: ");
+        string nome = ReadString();
+        System.Console.WriteLine("\nEscolha o tipo de Cliente: ");
+        System.Console.WriteLine("1 - Normal");
+        System.Console.WriteLine("2 - Preferencial");
+        System.Console.Write("Digite sua escolha: ");
+        int priority = ReadInt();
+
+        service.Add(nome, (ClientType)priority);
+
+    }
+
+    static void CallNext(IQueueService service) => service.CallNext();
+    
+
+    static void DisplayHistoryClients(IQueueService service)
+    {
+        
     }
 }
