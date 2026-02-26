@@ -102,9 +102,11 @@ public class QueueService : IQueueService
         if (client!.ClientType == ClientType.Comum)
         {
             _normalQueue = new Queue<Client>(new[] {client}.Concat(_normalQueue));
+            if (contador != 0) contador -= 1;
         }else
         {
             _PreferentialQueue = new Queue<Client>(new[] {client}.Concat(_PreferentialQueue));
+            contador = 0;
         }
 
 
