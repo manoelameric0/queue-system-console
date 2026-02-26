@@ -29,7 +29,7 @@ public class QueueService : IQueueService
 
         if (name.Any(char.IsDigit))
         {
-            throw new ArgumentException("Nome inválido não é permitido numero no nome do cliente!!!");
+            throw new ArgumentException("Nome inválido não é permitido numero no nome do cliente   ");
         }
 
 
@@ -54,101 +54,99 @@ public class QueueService : IQueueService
 
     public void CallNext()
     {
-        if (!_normalQueue.Any() && !_PreferentialQueue.Any())
+        if (_normalQueue.Any() && _PreferentialQueue.Any())
         {
             throw new ArgumentException("Nenhum Cliente em Espera");
         }
-
-        Client? client = null;
 
         if (contador == 3)
         {
             if (_PreferentialQueue.Any())
             {
-                _PreferentialQueue.TryDequeue(out client!);
-                _history.Push(client!);
-                contador = 0;
-
-                
+                if (_PreferentialQueue.TryDequeue(out var atendidoPriority))
+                {
+                    _history.Push(atendidoPriority);
+                    contador = 0;
+                }
             }
             else
             {
-                _normalQueue.TryDequeue(out client!);
-                _history.Push(client!);
-                contador++;
+                if (_normalQueue.TryDequeue(out var atendidoNormal))
+                {
+                    _history.Push(atendidoNormal);
+                    contador++;
+                }
 
-                
+
+
             }
 
         }
 
         var filaFinal = new Queue<Client>(_normalQueue.Concat(_PreferentialQueue).OrderByDescending(c => c.EnQueueTime));
-        filaFinal.TryDequeue(out client);
-        AddHistory(client!);
+        if (filaFinal.TryDequeue(out var atendido))
+        {
+            AddHistory(atendido);
+        }
 
-        
+
 
     }
 
     public void UndoLastCall()
     {
-        if (!_history.Any())
+        if (_history.Any())
         {
-            throw new ArgumentException("Nenhum Cliente Atendido Até o Momento!!!");
+            throw new ArgumentException("Nenhum Cliente Atendido Até o Momento   ");
         }
 
-        var client = _history.FirstOrDefault();
+        var client = _history.Pop();
 
-        if (client!.ClientType == ClientType.Comum)
+        if (client.ClientType == ClientType.Comum)
         {
-            _normalQueue = new Queue<Client>(new[] {client}.Concat(_normalQueue));
+            _normalQueue = new Queue<Client>(new[] { client }.Concat(_normalQueue));
             if (contador != 0) contador -= 1;
-        }else
+        }
+        else
         {
-            _PreferentialQueue = new Queue<Client>(new[] {client}.Concat(_PreferentialQueue));
+            _PreferentialQueue = new Queue<Client>(new[] { client }.Concat(_PreferentialQueue));
             contador = 0;
         }
 
 
     }
 
-    public IEnumerable<Client>? GetClients()
+    public IEnumerable<Client> GetClients()
     {
-        if (!_normalQueue.Any() && !_PreferentialQueue.Any())
-        {
-            throw new ArgumentException("Nenhum Cliente Atendido Até o Momento!!!");
-        }
 
         var clients = new Queue<Client>(_normalQueue.Concat(_PreferentialQueue).OrderByDescending(c => c.EnQueueTime));
 
         return clients;
     }
 
-    public IEnumerable<Client>? GetHistory()
+    public IEnumerable<Client> GetHistory() => _history ?? Enumerable.Empty<Client>();
+
+
+    void AddHistory(Client client)
     {
-        if (!_history.Any())
+        if (client.ClientType == ClientType.Comum)
         {
-            throw new ArgumentException("Nenhum Cliente Atendido Até o Momento!!!");
+            if (_normalQueue.TryDequeue(out var atendidoNormal))
+            {
+
+                _history.Push(atendidoNormal);
+                contador++;
+            }
         }
 
-        return _history;
+        if (client.ClientType == ClientType.Prioridade)
+        {
+            if (_PreferentialQueue.TryDequeue(out var atendidoPriority))
+            {
+                _history.Push(atendidoPriority);
+                contador = 0;
+            }
+        }
     }
 
-    void AddHistory(Client? client)
-    {
-        if (client!.ClientType == ClientType.Comum)
-        {
-            _normalQueue.TryDequeue( out client!);
-            _history.Push(client!);
-            contador++;
-        }
-
-        if (client!.ClientType == ClientType.Prioridade)
-        {
-            _PreferentialQueue.TryDequeue(out client!);
-            _history.Push(client!);
-            contador = 0;
-        }
-    }
-    
 }
