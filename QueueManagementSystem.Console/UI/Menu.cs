@@ -63,7 +63,7 @@ public class Menu
                     }
                     catch (ArgumentException ex)
                     {
-                     System.Console.WriteLine($"Error: {ex.Message}");   
+                        System.Console.WriteLine($"Error: {ex.Message}");
                     }
                     break;
                 default:
@@ -89,12 +89,12 @@ public class Menu
 
     static string ReadString()
     {
-        string input = System.Console.ReadLine();
+        string input = System.Console.ReadLine()!;
         while (string.IsNullOrWhiteSpace(input) || input.Any(char.IsDigit) || int.TryParse(input, out int a))
         {
             System.Console.WriteLine("Valor inválido!!!");
             System.Console.Write("Digite o nome do cliente: ");
-            input = System.Console.ReadLine();
+            input = System.Console.ReadLine()!;
 
         }
 
@@ -124,12 +124,50 @@ public class Menu
 
     static void UndoLastCall(IQueueService service) => service.UndoLastCall();
 
-        
-    
-    
+
+
+
 
     static void DisplayHistoryClients(IQueueService service)
     {
-        
+        System.Console.WriteLine("========================================");
+        System.Console.WriteLine("         FILAS E HISTÓRICO");
+        System.Console.WriteLine("========================================");
+        System.Console.WriteLine("");
+
+        var clientsComum = service.GetClients()!.Where(c => c.ClientType == ClientType.Comum);
+        var clientsPriority = service.GetClients()!.Where(c => c.ClientType == ClientType.Prioridade);
+
+        if (clientsComum.Any())
+        {
+            System.Console.WriteLine("Fila Normal:");
+            foreach (var client in clientsComum)
+            {
+                System.Console.WriteLine($"- {client.Name} | Horario de Chegada: {client.EnQueueTime:HH:mm}");
+            }
+        }
+
+        if (clientsPriority.Any())
+        {
+            System.Console.WriteLine("Fila Preferencial:");
+            foreach (var client in clientsPriority)
+            {
+                System.Console.WriteLine($"- {client.Name} | Horario de Chegada: {client.EnQueueTime:HH:mm}");
+            }
+        }
+
+        var history = service.GetHistory();
+        if (history!.Any())
+        {
+            System.Console.WriteLine("Histórico de atendimentos:");
+            foreach (var client in history!)
+            {
+                System.Console.WriteLine($"- {client.Name} ({client.ClientType}) | Hora de Chegada: {client.EnQueueTime}");
+            }
+        }
+
+        System.Console.WriteLine("----------------------------------------");
+        System.Console.Write("Pressione [Enter] para voltar");
+        System.Console.ReadKey();
     }
 }
