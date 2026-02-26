@@ -55,6 +55,17 @@ public class Menu
                         System.Console.WriteLine($"\nError: {ex.Message}");
                     }
                     break;
+
+                case MenuOption.UndoLastCall:
+                    try
+                    {
+                        UndoLastCall(service);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                     System.Console.WriteLine($"Error: {ex.Message}");   
+                    }
+                    break;
                 default:
                     System.Console.WriteLine("\nOpção Inválida!\n");
                     break;
@@ -110,6 +121,11 @@ public class Menu
     }
 
     static void CallNext(IQueueService service) => service.CallNext();
+
+    static void UndoLastCall(IQueueService service) => service.UndoLastCall();
+
+        
+    
     
 
     static void DisplayHistoryClients(IQueueService service)
