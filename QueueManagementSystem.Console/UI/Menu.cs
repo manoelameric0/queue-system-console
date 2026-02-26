@@ -67,10 +67,14 @@ public class Menu
                     }
                     break;
 
+                case MenuOption.DisplayAll:
+                    DisplayHistoryClients(service);
+                    break;
+
                 case MenuOption.Exit:
                     return;
                 default:
-                    System.Console.WriteLine("\nOpção Inválida!\n");
+                    System.Console.WriteLine("\nOpção Inválida \n");
                     break;
             }
 
@@ -82,7 +86,7 @@ public class Menu
     static int ReadInt()
     {
         int option;
-        while (!int.TryParse(System.Console.ReadLine(), out option))
+        while ( int.TryParse(System.Console.ReadLine(), out option))
         {
             System.Console.WriteLine("Caráctere inválido");
         }
@@ -92,12 +96,12 @@ public class Menu
 
     static string ReadString()
     {
-        string input = System.Console.ReadLine()!;
+        string input = System.Console.ReadLine() ;
         while (string.IsNullOrWhiteSpace(input) || input.Any(char.IsDigit) || int.TryParse(input, out int a))
         {
-            System.Console.WriteLine("Valor inválido!!!");
+            System.Console.WriteLine("Valor inválido   ");
             System.Console.Write("Digite o nome do cliente: ");
-            input = System.Console.ReadLine()!;
+            input = System.Console.ReadLine() ;
 
         }
 
@@ -134,8 +138,14 @@ public class Menu
         System.Console.WriteLine("========================================");
         System.Console.WriteLine("");
 
-        var clientsComum = service.GetClients()!.Where(c => c.ClientType == ClientType.Comum);
-        var clientsPriority = service.GetClients()!.Where(c => c.ClientType == ClientType.Prioridade);
+        var clientsComum = service.GetClients() .Where(c => c.ClientType == ClientType.Comum);
+        var clientsPriority = service.GetClients() .Where(c => c.ClientType == ClientType.Prioridade);
+        var history = service.GetHistory() ;
+
+        if ( clientsComum.Any() &&  clientsPriority.Any() &&  history.Any())
+        {
+            
+        }
 
         if (clientsComum.Any())
         {
@@ -155,11 +165,11 @@ public class Menu
             }
         }
 
-        var history = service.GetHistory();
-        if (history!.Any())
+        
+        if (history.Any())
         {
             System.Console.WriteLine("Histórico de atendimentos:");
-            foreach (var client in history!)
+            foreach (var client in history )
             {
                 System.Console.WriteLine($"- {client.Name} ({client.ClientType}) | Hora de Chegada: {client.EnQueueTime}");
             }
