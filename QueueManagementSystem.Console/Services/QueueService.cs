@@ -52,7 +52,7 @@ public class QueueService : IQueueService
 
     }
 
-    public Client? CallNext()
+    public void CallNext()
     {
         if (!_normalQueue.Any() && !_PreferentialQueue.Any())
         {
@@ -69,7 +69,7 @@ public class QueueService : IQueueService
                 _history.Push(client!);
                 contador = 0;
 
-                return client;
+                
             }
             else
             {
@@ -77,7 +77,7 @@ public class QueueService : IQueueService
                 _history.Push(client!);
                 contador++;
 
-                return client;
+                
             }
 
         }
@@ -86,11 +86,11 @@ public class QueueService : IQueueService
         filaFinal.TryDequeue(out client);
         AddHistory(client!);
 
-        return client;
+        
 
     }
 
-    public Client? UndoLastCall()
+    public void UndoLastCall()
     {
         if (!_history.Any())
         {
@@ -107,7 +107,6 @@ public class QueueService : IQueueService
             _PreferentialQueue = new Queue<Client>(new[] {client}.Concat(_PreferentialQueue));
         }
 
-        return client!;
 
     }
 

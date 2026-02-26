@@ -7,8 +7,8 @@ namespace QueueManagementSystem.Console.Services;
 public interface IQueueService
 {
     void Add(string name, ClientType type);
-    Client? CallNext();
-    Client? UndoLastCall();
+    void CallNext();
+    void UndoLastCall();
     IEnumerable<Client>? GetClients();
     IEnumerable<Client>? GetHistory();
 
