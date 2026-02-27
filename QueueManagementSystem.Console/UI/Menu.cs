@@ -86,7 +86,7 @@ public class Menu
     static int ReadInt()
     {
         int option;
-        while ( int.TryParse(System.Console.ReadLine(), out option))
+        while (!int.TryParse(System.Console.ReadLine(), out option))
         {
             System.Console.WriteLine("Caráctere inválido");
         }
@@ -142,7 +142,7 @@ public class Menu
         var clientsPriority = service.GetClients().Where(c => c.ClientType == ClientType.Prioridade);
         var history = service.GetHistory() ;
 
-        if ( clientsComum.Any() &&  clientsPriority.Any() &&  history.Any()) System.Console.WriteLine("Nenhum Cliente Atendido até o Momento");
+        if (!clientsComum.Any() &&  !clientsPriority.Any() &&  !history.Any()) System.Console.WriteLine("Nenhum Cliente Atendido até o Momento");
         
 
         if (clientsComum.Any())
