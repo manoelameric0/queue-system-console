@@ -54,11 +54,6 @@ public class QueueService : IQueueService
 
     public void CallNext()
     {
-        if (!_normalQueue.Any() && !_PreferentialQueue.Any())
-        {
-            throw new ArgumentException("Nenhum Cliente em Espera");
-        }
-
         if (contador == 3)
         {
             if (_PreferentialQueue.Any())
@@ -76,8 +71,6 @@ public class QueueService : IQueueService
                     _history.Push(atendidoNormal);
                     contador++;
                 }
-
-
 
             }
 
