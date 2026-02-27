@@ -9,7 +9,7 @@ public interface IQueueService
     void Add(string name, ClientType type);
     void CallNext();
     void UndoLastCall();
-    IEnumerable<Client>? GetClients();
-    IEnumerable<Client>? GetHistory();
+    IEnumerable<Client> GetClients();
+    IEnumerable<Client> GetHistory();
 
 }
