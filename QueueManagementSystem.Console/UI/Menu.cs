@@ -1,4 +1,5 @@
 using System;
+using Microsoft.VisualBasic;
 using QueueManagementSystem.Console.Enums;
 using QueueManagementSystem.Console.Models;
 using QueueManagementSystem.Console.Services;
@@ -7,6 +8,7 @@ namespace QueueManagementSystem.Console.UI;
 
 public class Menu
 {
+    
     public void Executar(IQueueService service)
     {
         
@@ -176,5 +178,19 @@ public class Menu
         System.Console.WriteLine("----------------------------------------");
         System.Console.Write("Pressione [Enter] para voltar");
         System.Console.ReadKey();
+        System.Console.Clear();
+    }
+
+    static void ShowError(string message)
+    {
+        
+    }
+    static void ShowSuccess(string message)
+    {
+        
+    }
+    static void ShowInfo(string message)
+    {
+        
     }
 }
