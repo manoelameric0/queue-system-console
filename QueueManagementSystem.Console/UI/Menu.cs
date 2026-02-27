@@ -8,13 +8,14 @@ namespace QueueManagementSystem.Console.UI;
 
 public class Menu
 {
-    
+
     public void Executar(IQueueService service)
     {
-        
+
         while (true)
         {
             //MENU RUNNING
+            System.Console.Clear();
             System.Console.WriteLine("========================================");
             ShowInfo("    SISTEMA DE GERENCIAMENTO DE FILA    ");
             System.Console.WriteLine("========================================");
@@ -54,7 +55,7 @@ public class Menu
                     }
                     catch (ArgumentException ex)
                     {
-                        ShowError($"\nError: {ex.Message}");
+                        System.Console.WriteLine($"\nError: {ex.Message}");
                     }
                     break;
 
@@ -88,9 +89,9 @@ public class Menu
     static int ReadInt()
     {
         int option;
-        while (!int.TryParse(System.Console.ReadLine(), out option))
+        while (!int.TryParse(System.Console.ReadLine(), out option) || option < 0)
         {
-            ShowError("Caráctere inválido");
+            ShowError("\nCaráctere inválido");
             System.Console.Write("\nDigite sua escolha: ");
         }
 
@@ -102,10 +103,9 @@ public class Menu
         string input = System.Console.ReadLine() ?? string.Empty;
         while (string.IsNullOrWhiteSpace(input) || input.Any(char.IsDigit) || int.TryParse(input, out int a))
         {
-            ShowError("Valor inválido!!!");
+            ShowError("\nValor inválido!!!");
             System.Console.Write("\nDigite o nome do cliente: ");
             input = System.Console.ReadLine() ?? string.Empty;
-
         }
 
         return input;
@@ -114,8 +114,9 @@ public class Menu
     //Ações de Console
     static void AddClient(IQueueService service)
     {
+        System.Console.Clear();
         System.Console.WriteLine("========================================");
-        System.Console.WriteLine("         ADICIONAR CLIENTE");
+        ShowInfo("         ADICIONAR CLIENTE");
         System.Console.WriteLine("========================================");
         System.Console.WriteLine("");
         System.Console.Write("Digite o nome do cliente: ");
@@ -131,24 +132,44 @@ public class Menu
 
     }
 
-    static void CallNext(IQueueService service) => service.CallNext();
+    static void CallNext(IQueueService service)
+    {
+        if (!service.GetClients().Any())
+        {
+            \n("\nNenhum Cliente em Espera!");
+            System.Console.WriteLine("\n----------------------------------------");
+        System.Console.Write("Pressione [Qualquer Tecla] para voltar");
+        System.Console.ReadKey();
+        }
+        service.CallNext();
+    }
 
-    static void UndoLastCall(IQueueService service) => service.UndoLastCall();
+    static void UndoLastCall(IQueueService service)
+    {
+        if (!service.GetClients().Any())
+        {
+            ShowError("\nNenhum Cliente Atendido até o momento!");
+            System.Console.WriteLine("\n----------------------------------------");
+            System.Console.Write("Pressione [Qualquer Tecla] para voltar");
+            System.Console.ReadKey();
+        }
+        service.UndoLastCall();
+    }
 
     static void DisplayHistoryClients(IQueueService service)
     {
         System.Console.Clear();
         System.Console.WriteLine("========================================");
-        System.Console.WriteLine("         FILAS E HISTÓRICO");
+        ShowInfo("         FILAS E HISTÓRICO");
         System.Console.WriteLine("========================================");
         System.Console.WriteLine("");
 
         var clientsComum = service.GetClients().Where(c => c.ClientType == ClientType.Comum);
         var clientsPriority = service.GetClients().Where(c => c.ClientType == ClientType.Prioridade);
-        var history = service.GetHistory() ;
+        var history = service.GetHistory();
 
-        if (!clientsComum.Any() &&  !clientsPriority.Any() &&  !history.Any()) ShowInfo("Nenhum Cliente Atendido até o Momento");
-        
+        if (!clientsComum.Any() && !clientsPriority.Any() && !history.Any()) ShowInfo("Nenhum Cliente Atendido até o Momento");
+
 
         if (clientsComum.Any())
         {
@@ -168,18 +189,18 @@ public class Menu
             }
         }
 
-        
+
         if (history.Any())
         {
             ShowInfo("Histórico de atendimentos:");
-            foreach (var client in history )
+            foreach (var client in history)
             {
-                System.Console.WriteLine($"- {client.Name} ({client.ClientType}) | Hora de Chegada: {client.EnQueueTime}");
+                System.Console.WriteLine($"- {client.Name} ({client.ClientType}) | Hora de Chegada: {client.EnQueueTime:HH:mm}");
             }
         }
 
         System.Console.WriteLine("----------------------------------------");
-        System.Console.Write("Pressione [Enter] para voltar");
+        System.Console.Write("Pressione [Qualquer Tecla] para voltar");
         System.Console.ReadKey();
     }
 
