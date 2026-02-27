@@ -8,28 +8,23 @@ public class Client
     public string Name {get;}
     public Guid ID {get;}
     public ClientType ClientType {get;}
-    public DateTime? EnQueueTime;
+    public DateTime EnQueueTime;
 
-    public Client(string name,ClientType clientType, DateTime? enQueueTime)
+    public Client(string name,ClientType clientType, DateTime enQueueTime)
     {
-        if (string.IsNullOrWhiteSpace(name) && name.Length < 3)
+        if (string.IsNullOrWhiteSpace(name) || name.Length < 3)
         {
-            throw new ArgumentException("Nome Inválido!!!");
+            throw new ArgumentException("Nome inválido: mínimo 3 caracteres e sem números.");
         }
 
         if (name.Any(char.IsDigit))
         {
-            throw new ArgumentException("O nome não pode conter Numeros!!!");
-        }
-
-        if (enQueueTime == null)
-        {
-            throw new ArgumentException("Hora de Chegada Inválida!!!");
+            throw new ArgumentException("O nome não pode conter números.");
         }
 
         if (clientType != ClientType.Prioridade && clientType != ClientType.Comum)
         {
-            throw new ArgumentException("Tipo Inválido");
+            throw new ArgumentException("Tipo de cliente inválido.");
         }
 
         Name = name;
