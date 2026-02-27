@@ -96,12 +96,12 @@ public class Menu
 
     static string ReadString()
     {
-        string input = System.Console.ReadLine() ;
+        string input = System.Console.ReadLine() ?? string.Empty;
         while (string.IsNullOrWhiteSpace(input) || input.Any(char.IsDigit) || int.TryParse(input, out int a))
         {
             System.Console.WriteLine("Valor inválido   ");
             System.Console.Write("Digite o nome do cliente: ");
-            input = System.Console.ReadLine() ;
+            input = System.Console.ReadLine() ?? string.Empty;
 
         }
 
@@ -138,14 +138,12 @@ public class Menu
         System.Console.WriteLine("========================================");
         System.Console.WriteLine("");
 
-        var clientsComum = service.GetClients() .Where(c => c.ClientType == ClientType.Comum);
-        var clientsPriority = service.GetClients() .Where(c => c.ClientType == ClientType.Prioridade);
+        var clientsComum = service.GetClients().Where(c => c.ClientType == ClientType.Comum);
+        var clientsPriority = service.GetClients().Where(c => c.ClientType == ClientType.Prioridade);
         var history = service.GetHistory() ;
 
-        if ( clientsComum.Any() &&  clientsPriority.Any() &&  history.Any())
-        {
-            
-        }
+        if ( clientsComum.Any() &&  clientsPriority.Any() &&  history.Any()) System.Console.WriteLine("Nenhum Cliente Atendido até o Momento");
+        
 
         if (clientsComum.Any())
         {
