@@ -54,7 +54,7 @@ public class QueueService : IQueueService
 
     public void CallNext()
     {
-        if (_normalQueue.Any() && _PreferentialQueue.Any())
+        if (!_normalQueue.Any() && !_PreferentialQueue.Any())
         {
             throw new ArgumentException("Nenhum Cliente em Espera");
         }
@@ -83,7 +83,7 @@ public class QueueService : IQueueService
 
         }
 
-        var filaFinal = new Queue<Client>(_normalQueue.Concat(_PreferentialQueue).OrderByDescending(c => c.EnQueueTime));
+        var filaFinal = new Queue<Client>(_normalQueue.Concat(_PreferentialQueue).OrderBy(c => c.EnQueueTime));
         if (filaFinal.TryDequeue(out var atendido))
         {
             AddHistory(atendido);
@@ -95,7 +95,7 @@ public class QueueService : IQueueService
 
     public void UndoLastCall()
     {
-        if (_history.Any())
+        if (!_history.Any())
         {
             throw new ArgumentException("Nenhum Cliente Atendido Até o Momento!!!");
         }
@@ -119,7 +119,7 @@ public class QueueService : IQueueService
     public IEnumerable<Client> GetClients()
     {
 
-        var clients = new Queue<Client>(_normalQueue.Concat(_PreferentialQueue).OrderByDescending(c => c.EnQueueTime));
+        var clients = new Queue<Client>(_normalQueue.Concat(_PreferentialQueue).OrderBy(c => c.EnQueueTime));
 
         return clients ?? Enumerable.Empty<Client>();
     }
