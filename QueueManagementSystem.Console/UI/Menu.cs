@@ -16,7 +16,7 @@ public class Menu
         {
             //MENU RUNNING
             System.Console.WriteLine("========================================");
-            System.Console.WriteLine("    SISTEMA DE GERENCIAMENTO DE FILA    ");
+            ShowInfo("    SISTEMA DE GERENCIAMENTO DE FILA    ");
             System.Console.WriteLine("========================================");
             System.Console.WriteLine("");
             System.Console.WriteLine($"Client Atual: {(service.GetClients()?.FirstOrDefault() is Client c ? $"[ {c.Name} ({c.ClientType}) | Hora de Chegada: {c.EnQueueTime:HH:mm} ]" : "[ Nenhum cliente em atendimento ]")}");
@@ -43,7 +43,7 @@ public class Menu
                     }
                     catch (ArgumentException ex)
                     {
-                        System.Console.WriteLine($"\nError: {ex.Message}");
+                        ShowError($"\nError: {ex.Message}");
                     }
                     break;
 
@@ -54,7 +54,7 @@ public class Menu
                     }
                     catch (ArgumentException ex)
                     {
-                        System.Console.WriteLine($"\nError: {ex.Message}");
+                        ShowError($"\nError: {ex.Message}");
                     }
                     break;
 
@@ -65,7 +65,7 @@ public class Menu
                     }
                     catch (ArgumentException ex)
                     {
-                        System.Console.WriteLine($"Error: {ex.Message}");
+                        ShowError($"\nError: {ex.Message}");
                     }
                     break;
 
@@ -76,7 +76,7 @@ public class Menu
                 case MenuOption.Exit:
                     return;
                 default:
-                    System.Console.WriteLine("\nOpção Inválida \n");
+                    ShowError("\nOpção Inválida \n");
                     break;
             }
 
@@ -90,7 +90,8 @@ public class Menu
         int option;
         while (!int.TryParse(System.Console.ReadLine(), out option))
         {
-            System.Console.WriteLine("Caráctere inválido");
+            ShowError("Caráctere inválido");
+            System.Console.Write("\nDigite sua escolha: ");
         }
 
         return option;
@@ -101,8 +102,8 @@ public class Menu
         string input = System.Console.ReadLine() ?? string.Empty;
         while (string.IsNullOrWhiteSpace(input) || input.Any(char.IsDigit) || int.TryParse(input, out int a))
         {
-            System.Console.WriteLine("Valor inválido   ");
-            System.Console.Write("Digite o nome do cliente: ");
+            ShowError("Valor inválido!!!");
+            System.Console.Write("\nDigite o nome do cliente: ");
             input = System.Console.ReadLine() ?? string.Empty;
 
         }
@@ -126,6 +127,7 @@ public class Menu
         int priority = ReadInt();
 
         service.Add(nome, (ClientType)priority);
+        ShowSuccess("Cliente Adicionado a Fila");
 
     }
 
@@ -135,6 +137,7 @@ public class Menu
 
     static void DisplayHistoryClients(IQueueService service)
     {
+        System.Console.Clear();
         System.Console.WriteLine("========================================");
         System.Console.WriteLine("         FILAS E HISTÓRICO");
         System.Console.WriteLine("========================================");
@@ -144,12 +147,12 @@ public class Menu
         var clientsPriority = service.GetClients().Where(c => c.ClientType == ClientType.Prioridade);
         var history = service.GetHistory() ;
 
-        if (!clientsComum.Any() &&  !clientsPriority.Any() &&  !history.Any()) System.Console.WriteLine("Nenhum Cliente Atendido até o Momento");
+        if (!clientsComum.Any() &&  !clientsPriority.Any() &&  !history.Any()) ShowInfo("Nenhum Cliente Atendido até o Momento");
         
 
         if (clientsComum.Any())
         {
-            System.Console.WriteLine("Fila Normal:");
+            ShowInfo("Fila Comum:");
             foreach (var client in clientsComum)
             {
                 System.Console.WriteLine($"- {client.Name} | Horario de Chegada: {client.EnQueueTime:HH:mm}");
@@ -158,7 +161,7 @@ public class Menu
 
         if (clientsPriority.Any())
         {
-            System.Console.WriteLine("Fila Preferencial:");
+            ShowInfo("Fila Preferencial:");
             foreach (var client in clientsPriority)
             {
                 System.Console.WriteLine($"- {client.Name} | Horario de Chegada: {client.EnQueueTime:HH:mm}");
@@ -168,7 +171,7 @@ public class Menu
         
         if (history.Any())
         {
-            System.Console.WriteLine("Histórico de atendimentos:");
+            ShowInfo("Histórico de atendimentos:");
             foreach (var client in history )
             {
                 System.Console.WriteLine($"- {client.Name} ({client.ClientType}) | Hora de Chegada: {client.EnQueueTime}");
@@ -178,19 +181,24 @@ public class Menu
         System.Console.WriteLine("----------------------------------------");
         System.Console.Write("Pressione [Enter] para voltar");
         System.Console.ReadKey();
-        System.Console.Clear();
     }
 
     static void ShowError(string message)
     {
-        
+        System.Console.ForegroundColor = ConsoleColor.Red;
+        System.Console.WriteLine(message);
+        System.Console.ResetColor();
     }
     static void ShowSuccess(string message)
     {
-        
+        System.Console.ForegroundColor = ConsoleColor.Green;
+        System.Console.WriteLine(message);
+        System.Console.ResetColor();
     }
     static void ShowInfo(string message)
     {
-        
+        System.Console.ForegroundColor = ConsoleColor.Yellow;
+        System.Console.WriteLine(message);
+        System.Console.ResetColor();
     }
 }
