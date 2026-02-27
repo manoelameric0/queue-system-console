@@ -97,7 +97,7 @@ public class QueueService : IQueueService
     {
         if (_history.Any())
         {
-            throw new ArgumentException("Nenhum Cliente Atendido Até o Momento   ");
+            throw new ArgumentException("Nenhum Cliente Atendido Até o Momento!!!");
         }
 
         var client = _history.Pop();
@@ -121,7 +121,7 @@ public class QueueService : IQueueService
 
         var clients = new Queue<Client>(_normalQueue.Concat(_PreferentialQueue).OrderByDescending(c => c.EnQueueTime));
 
-        return clients;
+        return clients ?? Enumerable.Empty<Client>();
     }
 
     public IEnumerable<Client> GetHistory() => _history ?? Enumerable.Empty<Client>();
