@@ -86,27 +86,29 @@ public class QueueService : IQueueService
 
     }
 
-    public void UndoLastCall()
+    public Client UndoLastCall()
     {
-        if (!_history.Any())
+        //FINALIZAR O RETORNO DO UNDO PARA APARECER NO MENU!!!
+        Client client = e
+        if (_history.Any())
         {
-            throw new ArgumentException("Nenhum Cliente Atendido Até o Momento!!!");
+            client = _history.Pop();
+
+            if (client.ClientType == ClientType.Comum)
+            {
+                _normalQueue = new Queue<Client>(new[] { client }.Concat(_normalQueue));
+                if (contador != 0) contador -= 1;
+                return client;
+            }
+            else
+            {
+                _PreferentialQueue = new Queue<Client>(new[] { client }.Concat(_PreferentialQueue));
+                contador = 0;
+                return client;
+            }
+
         }
-
-        var client = _history.Pop();
-
-        if (client.ClientType == ClientType.Comum)
-        {
-            _normalQueue = new Queue<Client>(new[] { client }.Concat(_normalQueue));
-            if (contador != 0) contador -= 1;
-        }
-        else
-        {
-            _PreferentialQueue = new Queue<Client>(new[] { client }.Concat(_PreferentialQueue));
-            contador = 0;
-        }
-
-
+        return client;
     }
 
     public IEnumerable<Client> GetClients()

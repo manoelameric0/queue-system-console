@@ -8,7 +8,7 @@ public interface IQueueService
 {
     void Add(string name, ClientType type);
     void CallNext();
-    void UndoLastCall();
+    Client UndoLastCall();
     IEnumerable<Client> GetClients();
     IEnumerable<Client> GetHistory();
 
