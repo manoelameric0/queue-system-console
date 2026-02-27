@@ -20,7 +20,7 @@ public class Menu
             ShowInfo("    SISTEMA DE GERENCIAMENTO DE FILA    ");
             System.Console.WriteLine("========================================");
             System.Console.WriteLine("");
-            System.Console.WriteLine($"Client Atual: {(service.GetClients()?.FirstOrDefault() is Client c ? $"[ {c.Name} ({c.ClientType}) | Hora de Chegada: {c.EnQueueTime:HH:mm} ]" : "[ Nenhum cliente em atendimento ]")}");
+            System.Console.WriteLine($"Client Atual: {(service.GetClients().FirstOrDefault() is Client c ? $"[ {c.Name} ({c.ClientType}) | Hora de Chegada: {c.EnQueueTime:HH:mm:ss} ]" : "[ Nenhum cliente em atendimento ]")}");
             System.Console.WriteLine("");
             System.Console.WriteLine("----------------------------------------");
             System.Console.WriteLine("Selecione uma opção:");
@@ -45,29 +45,18 @@ public class Menu
                     catch (ArgumentException ex)
                     {
                         ShowError($"\nError: {ex.Message}");
+                        System.Console.WriteLine("\n----------------------------------------");
+                        System.Console.Write("Pressione [Qualquer Tecla] para voltar");
+                        System.Console.ReadKey();
                     }
                     break;
 
                 case MenuOption.CallNext:
-                    try
-                    {
-                        CallNext(service);
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        System.Console.WriteLine($"\nError: {ex.Message}");
-                    }
+                    CallNext(service);
                     break;
 
                 case MenuOption.UndoLastCall:
-                    try
-                    {
-                        UndoLastCall(service);
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        ShowError($"\nError: {ex.Message}");
-                    }
+                    UndoLastCall(service);
                     break;
 
                 case MenuOption.DisplayAll:
@@ -101,7 +90,7 @@ public class Menu
     static string ReadString()
     {
         string input = System.Console.ReadLine() ?? string.Empty;
-        while (string.IsNullOrWhiteSpace(input) || input.Any(char.IsDigit) || int.TryParse(input, out int a))
+        while (string.IsNullOrWhiteSpace(input) || input.Any(char.IsDigit))
         {
             ShowError("\nValor inválido!!!");
             System.Console.Write("\nDigite o nome do cliente: ");
@@ -128,25 +117,27 @@ public class Menu
         int priority = ReadInt();
 
         service.Add(nome, (ClientType)priority);
-        ShowSuccess("Cliente Adicionado a Fila");
-
+        ShowSuccess($"{nome} Adicionado a Fila");
+        System.Console.WriteLine("\n----------------------------------------");
+        System.Console.Write("Pressione [Qualquer Tecla] para voltar");
+        System.Console.ReadKey();
     }
 
     static void CallNext(IQueueService service)
     {
         if (!service.GetClients().Any())
         {
-            \n("\nNenhum Cliente em Espera!");
+            ShowError("\nNenhum Cliente em Espera!");
             System.Console.WriteLine("\n----------------------------------------");
-        System.Console.Write("Pressione [Qualquer Tecla] para voltar");
-        System.Console.ReadKey();
+            System.Console.Write("Pressione [Qualquer Tecla] para voltar");
+            System.Console.ReadKey();
         }
         service.CallNext();
     }
 
     static void UndoLastCall(IQueueService service)
     {
-        if (!service.GetClients().Any())
+        if (!service.GetHistory().Any())
         {
             ShowError("\nNenhum Cliente Atendido até o momento!");
             System.Console.WriteLine("\n----------------------------------------");
@@ -154,6 +145,11 @@ public class Menu
             System.Console.ReadKey();
         }
         service.UndoLastCall();
+        ShowSuccess($" de volta a fila.");
+        System.Console.WriteLine("\n----------------------------------------");
+        System.Console.Write("Pressione [Qualquer Tecla] para voltar");
+        System.Console.ReadKey();
+
     }
 
     static void DisplayHistoryClients(IQueueService service)
@@ -176,7 +172,7 @@ public class Menu
             ShowInfo("Fila Comum:");
             foreach (var client in clientsComum)
             {
-                System.Console.WriteLine($"- {client.Name} | Horario de Chegada: {client.EnQueueTime:HH:mm}");
+                System.Console.WriteLine($"- {client.Name} | Horario de Chegada: {client.EnQueueTime:HH:mm:ss}");
             }
         }
 
@@ -185,7 +181,7 @@ public class Menu
             ShowInfo("Fila Preferencial:");
             foreach (var client in clientsPriority)
             {
-                System.Console.WriteLine($"- {client.Name} | Horario de Chegada: {client.EnQueueTime:HH:mm}");
+                System.Console.WriteLine($"- {client.Name} | Horario de Chegada: {client.EnQueueTime:HH:mm:ss}");
             }
         }
 
@@ -195,7 +191,7 @@ public class Menu
             ShowInfo("Histórico de atendimentos:");
             foreach (var client in history)
             {
-                System.Console.WriteLine($"- {client.Name} ({client.ClientType}) | Hora de Chegada: {client.EnQueueTime:HH:mm}");
+                System.Console.WriteLine($"- {client.Name} ({client.ClientType}) | Hora de Chegada: {client.EnQueueTime:HH:mm:ss}");
             }
         }
 
