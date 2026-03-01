@@ -480,3 +480,9 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+/QueueManagementSystem.Console
+/QueueManagementSystem.Console/obj
+*.props
+*.json
+*.cache
+*.json
