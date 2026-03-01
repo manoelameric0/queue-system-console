@@ -27,13 +27,6 @@ public class QueueService : IQueueService
             throw new ArgumentException("Cliente já está na Fila");
         }
 
-        if (name.Any(char.IsDigit))
-        {
-            throw new ArgumentException("Nome inválido não é permitido numero no nome do cliente   ");
-        }
-
-
-
         //adiciona os cliente Comuns
         if (type == ClientType.Comum)
         {
@@ -62,6 +55,7 @@ public class QueueService : IQueueService
                 {
                     _history.Push(atendidoPriority);
                     contador = 0;
+                    return;
                 }
             }
             else
@@ -69,7 +63,8 @@ public class QueueService : IQueueService
                 if (_normalQueue.TryDequeue(out var atendidoNormal))
                 {
                     _history.Push(atendidoNormal);
-                    contador++;
+                    if(contador < 3) contador++;
+                    return;
                 }
 
             }
@@ -89,7 +84,7 @@ public class QueueService : IQueueService
     public Client? UndoLastCall()
     {
         //FINALIZAR O RETORNO DO UNDO PARA APARECER NO MENU!!!
-        Client client = default;
+        Client? client = default;
         
         if (_history.Any())
         {
@@ -143,6 +138,11 @@ public class QueueService : IQueueService
                 contador = 0;
             }
         }
+    }
+
+    public int GetContador()
+    {
+        return contador;
     }
 
 }
