@@ -144,8 +144,8 @@ public class Menu
             System.Console.Write("Pressione [Qualquer Tecla] para voltar");
             System.Console.ReadKey();
         }
-        service.UndoLastCall();
-        ShowSuccess($" de volta a fila.");
+        var client = service.UndoLastCall();
+        ShowSuccess($"{client} de volta a fila.");
         System.Console.WriteLine("\n----------------------------------------");
         System.Console.Write("Pressione [Qualquer Tecla] para voltar");
         System.Console.ReadKey();
