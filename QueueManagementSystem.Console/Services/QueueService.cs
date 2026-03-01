@@ -86,13 +86,14 @@ public class QueueService : IQueueService
 
     }
 
-    public Client UndoLastCall()
+    public Client? UndoLastCall()
     {
         //FINALIZAR O RETORNO DO UNDO PARA APARECER NO MENU!!!
-        Client client = e
+        Client client = default;
+        
         if (_history.Any())
         {
-            client = _history.Pop();
+          client = _history.Pop();
 
             if (client.ClientType == ClientType.Comum)
             {
