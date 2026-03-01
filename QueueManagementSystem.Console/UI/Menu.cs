@@ -16,11 +16,22 @@ public class Menu
         {
             //MENU RUNNING
             System.Console.Clear();
-            System.Console.WriteLine("========================================");
+            System.Console.WriteLine($"[{service.GetContador()}]=====================================");
             ShowInfo("    SISTEMA DE GERENCIAMENTO DE FILA    ");
             System.Console.WriteLine("========================================");
             System.Console.WriteLine("");
-            System.Console.WriteLine($"Client Atual: {(service.GetClients().FirstOrDefault() is Client c ? $"[ {c.Name} ({c.ClientType}) | Hora de Chegada: {c.EnQueueTime:HH:mm:ss} ]" : "[ Nenhum cliente em atendimento ]")}");
+            if (service.GetContador() < 3)
+            {
+                var client = service.GetClients().FirstOrDefault();
+
+                System.Console.WriteLine(client != null ? $"[ Client atual: {client.Name} ({client.ClientType}) | Hora de chegada: {client.EnQueueTime:HH:mm:ss} ]" : "[ Nenhum cliente em atendimento ]");
+            }
+            if (service.GetContador() >= 3)
+            {
+                var client = service.GetClients().FirstOrDefault(c => c.ClientType == ClientType.Prioridade);
+
+                System.Console.WriteLine(client != null ? $"[ Client atual: {client.Name} ({client.ClientType}) | Hora de chegada: {client.EnQueueTime:HH:mm:ss} ]" : "[ Nenhum cliente em atendimento ]");
+            }
             System.Console.WriteLine("");
             System.Console.WriteLine("----------------------------------------");
             System.Console.WriteLine("Selecione uma opção:");
@@ -144,12 +155,15 @@ public class Menu
             System.Console.Write("Pressione [Qualquer Tecla] para voltar");
             System.Console.ReadKey();
         }
-        var client = service.UndoLastCall();
-        ShowSuccess($"{client} de volta a fila.");
-        System.Console.WriteLine("\n----------------------------------------");
-        System.Console.Write("Pressione [Qualquer Tecla] para voltar");
-        System.Console.ReadKey();
 
+        if (service.GetHistory().Any())
+        {
+            var client = service.UndoLastCall();
+            ShowSuccess($"{client!.Name} de volta a fila.");
+            System.Console.WriteLine("\n----------------------------------------");
+            System.Console.Write("Pressione [Qualquer Tecla] para voltar");
+            System.Console.ReadKey();
+        }
     }
 
     static void DisplayHistoryClients(IQueueService service)
