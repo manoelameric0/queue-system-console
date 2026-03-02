@@ -15,4 +15,8 @@
     <Folder Include="UI\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="QueueManagementSystem.Console.csproj" />
+  </ItemGroup>
+
 </Project>
