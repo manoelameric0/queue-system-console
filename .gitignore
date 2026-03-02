@@ -486,3 +486,8 @@ $RECYCLE.BIN/
 *.json
 *.cache
 *.json
+/QueueManagementSystem.Console/obj
+*.cache
+*.json
+*.props
+*.csproj

@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "B:\\DOCUMENTS\\GitHub\\queue-system-console\\QueueManagementSystem.Console\\QueueManagementSystem.Console.csproj": {}
+    "B:\\DESKTOP\\md\\C#\\forks\\queue-system-console\\QueueManagementSystem.Console\\QueueManagementSystem.Console.csproj": {}
   },
   "projects": {
-    "B:\\DOCUMENTS\\GitHub\\queue-system-console\\QueueManagementSystem.Console\\QueueManagementSystem.Console.csproj": {
+    "B:\\DESKTOP\\md\\C#\\forks\\queue-system-console\\QueueManagementSystem.Console\\QueueManagementSystem.Console.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "B:\\DOCUMENTS\\GitHub\\queue-system-console\\QueueManagementSystem.Console\\QueueManagementSystem.Console.csproj",
+        "projectUniqueName": "B:\\DESKTOP\\md\\C#\\forks\\queue-system-console\\QueueManagementSystem.Console\\QueueManagementSystem.Console.csproj",
         "projectName": "QueueManagementSystem.Console",
-        "projectPath": "B:\\DOCUMENTS\\GitHub\\queue-system-console\\QueueManagementSystem.Console\\QueueManagementSystem.Console.csproj",
-        "packagesPath": "C:\\Users\\MD\\.nuget\\packages\\",
-        "outputPath": "B:\\DOCUMENTS\\GitHub\\queue-system-console\\QueueManagementSystem.Console\\obj\\",
+        "projectPath": "B:\\DESKTOP\\md\\C#\\forks\\queue-system-console\\QueueManagementSystem.Console\\QueueManagementSystem.Console.csproj",
+        "packagesPath": "C:\\Users\\CopyCenter\\.nuget\\packages\\",
+        "outputPath": "B:\\DESKTOP\\md\\C#\\forks\\queue-system-console\\QueueManagementSystem.Console\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\MD\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\CopyCenter\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
