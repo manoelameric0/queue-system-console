@@ -480,17 +480,17 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
-/QueueManagementSystem.Console
-/QueueManagementSystem.Console/obj
+*/QueueManagementSystem.Console/obj
 *.props
 *.json
 *.cache
 *.json
-/QueueManagementSystem.Console/obj
+*/QueueManagementSystem.Console/bin
 *.cache
 *.json
 *.props
-*.csproj
+**/bin/
+**/obj/
 /QueueManagementSystem.Console/obj
 /QueueManagementSystem.Console/obj
 QueueManagementSystem.Console/obj/QueueManagementSystem.Console.csproj.nuget.dgspec.json
