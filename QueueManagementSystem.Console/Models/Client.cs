@@ -12,7 +12,12 @@ public class Client
 
     public Client(string name,ClientType clientType, DateTime enQueueTime)
     {
-        if (string.IsNullOrWhiteSpace(name) || name.Length < 3)
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Nome inválido");
+        }
+
+        if (name.Length < 3)
         {
             throw new ArgumentException("Nome inválido: mínimo 3 caracteres e sem números.");
         }

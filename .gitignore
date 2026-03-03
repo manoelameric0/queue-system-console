@@ -491,3 +491,9 @@ $RECYCLE.BIN/
 *.json
 *.props
 *.csproj
+/QueueManagementSystem.Console/obj
+/QueueManagementSystem.Console/obj
+QueueManagementSystem.Console/obj/QueueManagementSystem.Console.csproj.nuget.dgspec.json
+QueueManagementSystem.Console/obj/project.nuget.cache
+QueueManagementSystem.Console/obj/project.assets.json
+QueueManagementSystem.Console/obj/QueueManagementSystem.Console.csproj.nuget.g.props
