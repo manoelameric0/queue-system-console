@@ -75,4 +75,17 @@ public class ClientTests
         // Assert
         Assert.Equal("O nome não pode conter números.", exception.Message);
     }
+
+    [Fact]
+    public void Client_Should_Set_Type_Correctly_When_Valid()
+    {
+        // Arrange
+        var service = new QueueService();
+
+        // Act
+        service.Add("Manoel", ClientType.Prioridade);
+
+        // Assert
+        Assert.Equal(ClientType.Prioridade, service.GetClients().First().ClientType);
+    }
 }
