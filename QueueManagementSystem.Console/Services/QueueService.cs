@@ -30,18 +30,18 @@ public class QueueService : IQueueService
         //adiciona os cliente Comuns
         if (type == ClientType.Comum)
         {
-            _normalQueue.Enqueue(new Client(name: name, clientType: type, enQueueTime: DateTime.Now));
+            _normalQueue.Enqueue(new Client(name: name, clientType: type));
         }
 
         //adiciona  os clientes Prioridade
         if (type == ClientType.Prioridade)
         {
-            _PreferentialQueue.Enqueue(new Client(name: name, clientType: type, enQueueTime: DateTime.Now));
+            _PreferentialQueue.Enqueue(new Client(name: name, clientType: type));
         }
 
         //adiciona todos os clientes no repository
         _repository.Add(new Client
-        (name: name, clientType: type, enQueueTime: DateTime.Now));
+        (name: name, clientType: type));
 
     }
 

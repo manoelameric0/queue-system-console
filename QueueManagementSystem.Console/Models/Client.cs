@@ -10,7 +10,7 @@ public class Client
     public ClientType ClientType {get;}
     public DateTime EnQueueTime;
 
-    public Client(string name,ClientType clientType, DateTime enQueueTime)
+    public Client(string name,ClientType clientType)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -35,6 +35,6 @@ public class Client
         Name = name;
         ID = Guid.NewGuid();
         ClientType = clientType;
-        EnQueueTime = enQueueTime;
+        EnQueueTime = DateTime.Now;
     }
 }

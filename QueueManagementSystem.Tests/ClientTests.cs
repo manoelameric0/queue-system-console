@@ -14,7 +14,7 @@ public class ClientTests
         var service = new QueueService();
 
         // Act
-        Client client = new Client("Manoel", ClientType.Comum, DateTime.Now);
+        Client client = new Client("Manoel", ClientType.Comum);
 
         // Assert
         Assert.Equal("Manoel", client.Name);
@@ -28,7 +28,7 @@ public class ClientTests
 
         ;
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => new Client(string.Empty, ClientType.Prioridade, DateTime.Now));
+        var exception = Assert.Throws<ArgumentException>(() => new Client(string.Empty, ClientType.Prioridade));
 
         // Assert
         Assert.Equal("Nome inválido", exception.Message);
@@ -42,7 +42,7 @@ public class ClientTests
 
         ;
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => new Client("", ClientType.Prioridade, DateTime.Now));
+        var exception = Assert.Throws<ArgumentException>(() => new Client("", ClientType.Prioridade));
 
         // Assert
         Assert.Equal("Nome inválido", exception.Message);
