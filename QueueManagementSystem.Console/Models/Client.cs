@@ -27,7 +27,7 @@ public class Client
             throw new ArgumentException("O nome não pode conter números.");
         }
 
-        if (clientType != ClientType.Prioridade && clientType != ClientType.Comum)
+        if (!Enum.IsDefined(typeof(ClientType), clientType))
         {
             throw new ArgumentException("Tipo de cliente inválido.");
         }
