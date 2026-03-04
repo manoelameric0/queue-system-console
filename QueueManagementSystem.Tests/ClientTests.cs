@@ -19,5 +19,20 @@ public class ClientTests
         // Assert
         Assert.Equal("Manoel", client.Name);
     }
-    
+
+    [Fact]
+    public void Client_Should_Exception_When_Name_Is_White_Space()
+    {
+        // Arrange
+        var service = new QueueService();
+
+        ;
+        // Act
+        var exception = Assert.Throws<ArgumentException>(() => new Client("", ClientType.Prioridade, DateTime.Now));
+
+        // Assert
+        Assert.Equal("Nome inválido", exception.Message);
+    }
+
+
 }
