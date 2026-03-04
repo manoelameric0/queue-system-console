@@ -62,5 +62,17 @@ public class ClientTests
         Assert.Equal("Nome inválido: mínimo 3 caracteres e sem números.", exception.Message);
     }
 
+    [Fact]
+    public void Client_Should_Exception_When_Name_Contains_Number()
+    {
+        // Arrange
+        var service = new QueueService();
 
+        ;
+        // Act
+        var exception = Assert.Throws<ArgumentException>(() => service.Add("Manoel123", ClientType.Comum));
+
+        // Assert
+        Assert.Equal("O nome não pode conter números.", exception.Message);
+    }
 }
