@@ -88,4 +88,17 @@ public class ClientTests
         // Assert
         Assert.Equal(ClientType.Prioridade, service.GetClients().First().ClientType);
     }
+
+    [Fact]
+    public void Client_Should_Throw_Exception_When_Type_Is_Invalid()
+    {
+        // Arrange
+        var service = new QueueService();
+
+        // Act
+        var exception = Assert.Throws<ArgumentException>(() => service.Add("Manoel", (ClientType)3));
+
+        // Assert
+        Assert.Equal("Tipo de cliente inválido.", exception.Message);
+    }
 }
