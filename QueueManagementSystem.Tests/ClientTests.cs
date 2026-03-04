@@ -48,5 +48,19 @@ public class ClientTests
         Assert.Equal("Nome inválido", exception.Message);
     }
 
+    [Fact]
+    public void Client_Should_Exception_When_Name_Is_Shorter_Than_Three_Characters()
+    {
+        // Arrange
+        var service = new QueueService();
+
+        ;
+        // Act
+        var exception = Assert.Throws<ArgumentException>(() => service.Add("Ma", ClientType.Comum));
+
+        // Assert
+        Assert.Equal("Nome inválido: mínimo 3 caracteres e sem números.", exception.Message);
+    }
+
 
 }
