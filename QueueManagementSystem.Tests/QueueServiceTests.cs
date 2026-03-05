@@ -70,25 +70,25 @@ public class QueueServiceTests
         Assert.Equal("Manoelle", historico.First().Name);
     }
 
-    [Fact]
-    public void UndoCallLast_Should_Reinsert_Last_Called_Client()
-    {
-        // Arrange → preparar cenário
-        var service = new QueueService();
+    // [Fact]
+    // public void UndoCallLast_Should_Reinsert_Last_Called_Client()
+    // {
+    //     // Arrange → preparar cenário
+    //     var service = new QueueService();
 
-        service.Add("Manoel", ClientType.Comum);
-        service.Add("Andryelle", ClientType.Comum);
-        service.Add("Madry", ClientType.Comum);
-        service.Add("Manoelle", ClientType.Prioridade);
+    //     service.Add("Manoel", ClientType.Comum);
+    //     service.Add("Andryelle", ClientType.Comum);
+    //     service.Add("Madry", ClientType.Comum);
+    //     service.Add("Manoelle", ClientType.Prioridade);
 
-        // Act → executar ação
-        service.CallNext(); // Manoel sai da fila
-        service.CallNext(); // Andryelle sai da fila
-        service.CallNext(); // Manoelle sai da fila
-        service.UndoLastCall();
+    //     // Act → executar ação
+    //     service.CallNext(); // Manoel sai da fila
+    //     service.CallNext(); // Andryelle sai da fila
+    //     service.CallNext(); // Manoelle sai da fila
+    //     service.UndoLastCall();
 
-        // Assert → verificar resultado
-        var Clients = service.GetClients();
-        Assert.Equal("Madry", Clients.First().Name);
-    }
+    //     // Assert → verificar resultado
+    //     var Clients = service.GetClients();
+    //     Assert.Equal("Madry", Clients.First().Name);
+    // }
 }

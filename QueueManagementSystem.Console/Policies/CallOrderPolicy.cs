@@ -1,15 +1,20 @@
 using System;
+using QueueManagementSystem.Console.Enums;
+using QueueManagementSystem.Console.Models;
 
 namespace QueueManagementSystem.Console.Policies;
 
 public class CallOrderPolicy
 {
-   public string Proximo(int quantidadeAtendido, int prioridade)
+   public ClientType CallOrderType(IEnumerable<Client> clients, bool havePriority)
     {
-        if (quantidadeAtendido == 3 && prioridade > 0)
+        var threeLasts = clients.TakeLast(3).Count(c => c.ClientType == ClientType.Comum);
+        
+        if (threeLasts == 3 && havePriority)
         {
-            return string.Format("Prioridade");
+            return ClientType.Prioridade;
+
         }
-        return string.Format("Normal");
+        return ClientType.Comum;
     }
 }

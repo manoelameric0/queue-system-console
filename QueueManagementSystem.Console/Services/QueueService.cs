@@ -2,6 +2,7 @@ using System;
 using Microsoft.VisualBasic;
 using QueueManagementSystem.Console.Enums;
 using QueueManagementSystem.Console.Models;
+using QueueManagementSystem.Console.Policies;
 using QueueManagementSystem.Console.Repositories;
 
 namespace QueueManagementSystem.Console.Services;
@@ -47,48 +48,39 @@ public class QueueService : IQueueService
 
     public void CallNext()
     {
-        if (contador == 3)
-        {
-            if (_PreferentialQueue.Any())
-            {
-                if (_PreferentialQueue.TryDequeue(out var atendidoPriority))
-                {
-                    _history.Push(atendidoPriority);
-                    contador = 0;
-                    return;
-                }
-            }
-            else
-            {
-                if (_normalQueue.TryDequeue(out var atendidoNormal))
-                {
-                    _history.Push(atendidoNormal);
-                    if(contador < 3) contador++;
-                    return;
-                }
+        var policy = new CallOrderPolicy();
 
+        var clientType = policy.CallOrderType(_history, _PreferentialQueue.Any());
+
+        if (clientType == ClientType.Prioridade)
+        {
+            if (_PreferentialQueue.TryDequeue(out var atendidoPriority))
+            {
+                _history.Push(atendidoPriority);
+                contador = 0;
+                return;
             }
 
         }
 
         var filaFinal = new Queue<Client>(_normalQueue.Concat(_PreferentialQueue).OrderBy(c => c.EnQueueTime));
-        if (filaFinal.TryDequeue(out var atendido))
+
+        if (filaFinal.Any())
         {
-            AddHistory(atendido);
+            if(filaFinal.TryDequeue(out var client))
+            _history.Push(client);
         }
-
-
-
+        
     }
 
     public Client? UndoLastCall()
     {
         //FINALIZAR O RETORNO DO UNDO PARA APARECER NO MENU!!!
         Client? client = default;
-        
+
         if (_history.Any())
         {
-          client = _history.Pop();
+            client = _history.Pop();
 
             if (client.ClientType == ClientType.Comum)
             {
