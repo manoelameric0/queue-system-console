@@ -109,7 +109,6 @@ public class QueueService : IQueueService
 
     public IEnumerable<Client> GetHistory() => _history ?? Enumerable.Empty<Client>();
 
-
     void AddHistory(Client client)
     {
         if (client.ClientType == ClientType.Comum)

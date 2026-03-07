@@ -20,35 +20,36 @@ public class CallOrderPolicyTest
         service.Add("Madry", ClientType.Comum);
         service.Add("Suh", ClientType.Prioridade);
         // Act
-        var resultado = regra.CallOrderType(service.GetClients(), true);
+        service.CallNext();
+        service.CallNext();
+
+        var resultado = regra.CallOrderType(service.GetHistory(), true);
+
+        // Assert
+        Assert.Equal(ClientType.Comum, resultado);
+    }
+
+    [Fact]
+    public void Policy_Should_Return_Priority_When_Counter_Is_Three()
+    {
+        // Arrange
+        var regra = new CallOrderPolicy();
+        var service = new QueueService();
+
+        service.Add("Manoel", ClientType.Comum);
+        service.Add("Andryelle", ClientType.Comum);
+        service.Add("Madry", ClientType.Comum);
+        service.Add("Manoelle", ClientType.Prioridade);
+        // Act
+        service.CallNext();
+        service.CallNext();
+        service.CallNext();
+
+        var resultado = regra.CallOrderType(service.GetHistory(), true);
 
         // Assert
         Assert.Equal(ClientType.Prioridade, resultado);
     }
-
-    // [Fact]
-    // public void Policy_Should_Return_Priority_When_Counter_Is_Three()
-    // {
-    //     // Arrange
-    //     var regra = new CallOrderPolicy();
-    //     var service = new QueueService();
-
-    //     service.Add("Manoel", ClientType.Comum);
-    //     service.Add("Andryelle", ClientType.Comum);
-    //     service.Add("Madry", ClientType.Comum);
-    //     service.Add("Manoelle", ClientType.Prioridade);
-    //     // Act
-    //     service.CallNext();
-    //     service.CallNext();
-    //     service.CallNext();
-    //     service.CallNext();
-
-    //     bool temPrioridade = service.GetClients().Any(c => c.ClientType == ClientType.Prioridade);
-    //     var resultado = regra.CallOrderType(service.GetHistory(), temPrioridade);
-
-    //     // Assert
-    //     Assert.Equal(ClientType.Prioridade, resultado);
-    // }
 
     [Fact]
     public void Policy_Should_Keep_Returning_Normal_When_No_Priority_Clients()
@@ -62,7 +63,12 @@ public class CallOrderPolicyTest
         service.Add("Madry", ClientType.Comum);
         service.Add("Manoelle", ClientType.Comum);
         // Act
-        var resultado = regra.CallOrderType(service.GetClients(), false);
+        service.CallNext();
+        service.CallNext();
+        service.CallNext();
+        service.CallNext();
+
+        var resultado = regra.CallOrderType(service.GetHistory(), false);
 
         // Assert
         Assert.Equal(ClientType.Comum, resultado);
