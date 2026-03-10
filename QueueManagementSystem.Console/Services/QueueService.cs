@@ -19,6 +19,10 @@ public class QueueService : IQueueService
     {
         _repository = new InMemoryQueueRepository();
     }
+    public QueueService(InMemoryQueueRepository repository)
+    {
+        _repository = repository
+    }
 
 
     public void Add(string name, ClientType type)
@@ -108,6 +112,7 @@ public class QueueService : IQueueService
     }
 
     public IEnumerable<Client> GetHistory() => _history ?? Enumerable.Empty<Client>();
+
 
     void AddHistory(Client client)
     {
