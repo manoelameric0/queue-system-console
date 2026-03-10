@@ -17,7 +17,9 @@ public class InMemoryQueueRepository:IQueueRepository
         _clientQueue.Remove(_clientQueue.FirstOrDefault()!);
     }
 
+    public void RestoreClient(Client client) => Add(client);
+
     public IEnumerable<Client> GetAll()
-     => _clientQueue;
+     => _clientQueue.OrderBy(c => c.EnQueueTime);
     
 }
