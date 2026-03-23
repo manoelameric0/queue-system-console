@@ -16,12 +16,12 @@ public class InMemoryQueueRepositoryTest
 
 
         // Act
-        _repository.Add(new Client(name:"Manoel",clientType: Console.Enums.ClientType.Comum));
+        _repository.Add(new Client(name: "Manoel", clientType: Console.Enums.ClientType.Comum));
 
         // Assert
         var clients = Assert.Single(_repository.GetAll());
 
-        Assert.Equal("Manoel",clients.Name);
+        Assert.Equal("Manoel", clients.Name);
     }
 
     [Fact]
@@ -49,10 +49,28 @@ public class InMemoryQueueRepositoryTest
         service.Add("Manoel", ClientType.Comum);
 
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => service.Add("Manoel",ClientType.Comum));
+        var exception = Assert.Throws<ArgumentException>(() => service.Add("Manoel", ClientType.Comum));
 
         // Assert
         Assert.Single(repository.GetAll());
+    }
+
+    [Fact]
+    public void Remove_Should_Throw_Exception_When_Queue_Is_Empty()
+    {
+        // Arrange
+        var repository = new InMemoryQueueRepository();
+        var service = new QueueService();
+
+        repository.Add(new Client("Manoel", ClientType.Comum));
+        repository.Add(new Client("Andryelle", ClientType.Comum));
+
+
+        // Act
+        var exception = Assert.Throws<ArgumentException>(() => service.CallNext());
+
+        // Assert
+        Assert.Equal("Nenhum Cliente Aguardando para ser atendido.", exception.Message);
     }
 
     [Fact]
@@ -61,9 +79,9 @@ public class InMemoryQueueRepositoryTest
         // Arrange
         var repository = new InMemoryQueueRepository();
 
-        repository.Add(new Client ("Manoel", ClientType.Comum));
-        repository.Add(new Client ("Andryelle", ClientType.Comum));
-        
+        repository.Add(new Client("Manoel", ClientType.Comum));
+        repository.Add(new Client("Andryelle", ClientType.Comum));
+
 
         // Act
         repository.Remove(repository.GetAll().First());
@@ -73,18 +91,33 @@ public class InMemoryQueueRepositoryTest
     }
 
     [Fact]
-    public void Exist_Should_Return_True_From_Repository()
+    public void Exists_Should_Return_True_When_Client_Already_Exists()
     {
         // Arrange
         var repository = new InMemoryQueueRepository();
 
-        repository.Add(new Client ("Manoel", ClientType.Comum));
+        repository.Add(new Client("Manoel", ClientType.Comum));
 
         // Act
-        bool existe = repository.Exist("Manoel");
+        bool existe = repository.Exists("Manoel");
 
         // Assert
         Assert.True(existe);
+    }
+
+    [Fact]
+    public void Exists_Should_Return_False_When_Client_Does_Not_Exist()
+    {
+        // Arrange
+        var repository = new InMemoryQueueRepository();
+
+        repository.Add(new Client("Manoel", ClientType.Comum));
+
+        // Act
+        bool existe = repository.Exists("Andryelle");
+
+        // Assert
+        Assert.False(existe);
     }
 
 }
