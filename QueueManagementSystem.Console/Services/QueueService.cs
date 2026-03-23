@@ -21,7 +21,7 @@ public class QueueService : IQueueService
     }
     public QueueService(InMemoryQueueRepository repository)
     {
-        _repository = repository
+        _repository = repository;
     }
 
 
