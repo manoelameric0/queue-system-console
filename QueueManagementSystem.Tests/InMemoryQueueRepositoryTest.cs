@@ -91,6 +91,23 @@ public class InMemoryQueueRepositoryTest
     }
 
     [Fact]
+    public void GetClients_Should_Return_All_Clients()
+    {
+        // Arrange
+        var repository = new InMemoryQueueRepository();
+
+        // Act
+        repository.Add(new Client("Manoel", ClientType.Comum));
+        repository.Add(new Client("Andryelle", ClientType.Comum));
+        repository.Add(new Client("Carlos", ClientType.Comum));
+
+        // Assert
+        Assert.Equal(3, repository.GetAll().Count());
+    }
+
+    
+
+    [Fact]
     public void Exists_Should_Return_True_When_Client_Already_Exists()
     {
         // Arrange
