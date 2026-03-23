@@ -27,7 +27,7 @@ public class QueueService : IQueueService
 
     public void Add(string name, ClientType type)
     {
-        if (_repository.Exist(name))
+        if (_repository.Exists(name))
         {
             throw new ArgumentException("Cliente já está na Fila");
         }
@@ -52,6 +52,8 @@ public class QueueService : IQueueService
 
     public void CallNext()
     {
+        if (!_repository.GetAll().Any()) throw new ArgumentException("Nenhum Cliente Aguardando para ser atendido.");
+
         var policy = new CallOrderPolicy();
 
         var clientType = policy.CallOrderType(_history, _PreferentialQueue.Any());
