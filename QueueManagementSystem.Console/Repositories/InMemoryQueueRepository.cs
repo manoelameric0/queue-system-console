@@ -12,10 +12,7 @@ public class InMemoryQueueRepository:IQueueRepository
         _clientQueue.Add(client);
     }
 
-    public void Remove()
-    {
-        _clientQueue.Remove(_clientQueue.FirstOrDefault()!);
-    }
+    public void Remove(Client client) => _clientQueue.Remove(client);
 
     public void RestoreClient(Client client) => Add(client);
 
