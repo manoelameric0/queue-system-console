@@ -12,4 +12,5 @@ public interface IQueueRepository
     void Add(Client client);
     void Remove(Client client);
     IEnumerable<Client> GetAll();
+    bool Exist(string name);
 }
