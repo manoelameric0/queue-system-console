@@ -72,4 +72,19 @@ public class InMemoryQueueRepositoryTest
         Assert.Single(repository.GetAll());
     }
 
+    [Fact]
+    public void Exist_Should_Return_True_From_Repository()
+    {
+        // Arrange
+        var repository = new InMemoryQueueRepository();
+
+        repository.Add(new Client ("Manoel", ClientType.Comum));
+
+        // Act
+        bool existe = repository.Exist("Manoel");
+
+        // Assert
+        Assert.True(existe);
+    }
+
 }
