@@ -27,7 +27,7 @@ public class QueueService : IQueueService
 
     public void Add(string name, ClientType type)
     {
-        if (_repository.GetAll().Any(c => string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase)))
+        if (_repository.Exist(name))
         {
             throw new ArgumentException("Cliente já está na Fila");
         }
