@@ -7,7 +7,7 @@ namespace QueueManagementSystem.Tests;
 public class QueueServiceTests
 {
     [Fact]
-    public void AddClient_Should_Add_Client_To_Queue()
+    public void Add_Should_Add_Normal_Client_When_Valid()
     {   //Arrange → preparar cenário
         var service = new QueueService();
 
@@ -16,35 +16,48 @@ public class QueueServiceTests
 
         //Assert → verificar resultado
         var Clients = service.GetClients();
-        Assert.Single(Clients);
+        Assert.Equal(ClientType.Comum, Clients.First().ClientType);
     }
 
     [Fact]
-    public void AddClient_Should_Throw_Exception_When_Name_Is_Empty()
+    public void Add_Should_Add_Priority_Client_When_Valid()
+    {   //Arrange → preparar cenário
+        var service = new QueueService();
+
+        //Act → executar ação
+        service.Add("Manoel", ClientType.Prioridade);
+
+        //Assert → verificar resultado
+        var Clients = service.GetClients();
+        Assert.Equal(ClientType.Prioridade, Clients.First().ClientType);
+    }
+
+    [Fact]
+    public void Add_Should_Throw_Exception_When_Client_Is_Duplicated()
     {
         // Given
         var service = new QueueService();
 
-
+        service.Add("Manoel", ClientType.Prioridade);
         // When
-        var exeception = Assert.Throws<ArgumentException>(() => service.Add("", ClientType.Comum));
+        var exeception = Assert.Throws<ArgumentException>(() => service.Add("Manoel", ClientType.Comum));
 
         // Then
-        Assert.Equal("Nome inválido", exeception.Message);
+        Assert.Equal("Cliente já está na Fila", exeception.Message);
     }
 
     [Fact]
-    public void AddClient_Should_Throw_Exception_When_Name_Is_Short()
+    public void Add_Should_Not_Modify_Queue_When_Duplicate_Exception_Is_Thrown()
     {
         // Given
         var service = new QueueService();
 
+        service.Add("Manoel", ClientType.Prioridade);
         // When
-        var exception = Assert.Throws<ArgumentException>(() => service.Add("Ma", ClientType.Prioridade));
-        
+        var exeception = Assert.Throws<ArgumentException>(() => service.Add("Manoel", ClientType.Comum));
 
         // Then
-        Assert.Equal("Nome inválido: mínimo 3 caracteres e sem números.", exception.Message);
+        Assert.Single(service.GetClients());
     }
 
     [Fact]
