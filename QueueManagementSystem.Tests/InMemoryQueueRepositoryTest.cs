@@ -105,7 +105,20 @@ public class InMemoryQueueRepositoryTest
         Assert.Equal(3, repository.GetAll().Count());
     }
 
-    
+    [Fact]
+    public void GetClients_Should_Return_Empty_When_No_Clients_Exist()
+    {
+        // Arrange
+        var repository = new InMemoryQueueRepository();
+
+        // Act
+        repository.Add(new Client("Manoel", ClientType.Comum));
+        var client = repository.GetAll().First();
+        repository.Remove(client);
+
+        // Assert
+        Assert.Empty(repository.GetAll());
+    }
 
     [Fact]
     public void Exists_Should_Return_True_When_Client_Already_Exists()
