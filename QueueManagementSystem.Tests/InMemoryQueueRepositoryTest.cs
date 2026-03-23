@@ -55,4 +55,21 @@ public class InMemoryQueueRepositoryTest
         Assert.Single(repository.GetAll());
     }
 
+    [Fact]
+    public void Remove_Should_Remove_Client_From_Repository()
+    {
+        // Arrange
+        var repository = new InMemoryQueueRepository();
+
+        repository.Add(new Client ("Manoel", ClientType.Comum));
+        repository.Add(new Client ("Andryelle", ClientType.Comum));
+        
+
+        // Act
+        repository.Remove(repository.GetAll().First());
+
+        // Assert
+        Assert.Single(repository.GetAll());
+    }
+
 }
