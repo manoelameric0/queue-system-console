@@ -103,6 +103,34 @@ public class QueueServiceTests
     }
 
     [Fact]
+    public void CallNext_Should_Call_Clients_In_Sequence_Based_On_Arrival_Order()
+    {
+        //Arrange → preparar cenário
+        var service = new QueueService();
+
+        service.Add("Manoel", ClientType.Comum);
+        service.Add("Andryelle", ClientType.Prioridade);
+        service.Add("Madry", ClientType.Comum);
+        service.Add("Fagna", ClientType.Comum);
+        service.Add("vitoria", ClientType.Comum);
+        service.Add("Mylenna", ClientType.Comum);
+        service.Add("Manoelle", ClientType.Prioridade);
+
+        //Act → executar ação
+        service.CallNext();
+        service.CallNext();
+        service.CallNext();
+        service.CallNext();
+        service.CallNext();
+        service.CallNext();
+
+        //Assert → verificar resultado
+
+
+        Assert.Equal("Manoelle", service.GetHistory().First().Name);
+    }
+
+    [Fact]
     public void CallNext_Should_Call_Priority_After_Three_Normal_Calls()
     {
         //Arrange → preparar cenário
