@@ -10,7 +10,7 @@ namespace QueueManagementSystem.Console.Services;
 public class QueueService : IQueueService
 {
     int contador = 0;
-    Stack<Client> _history = new();
+    List<Client> _history = new();
     Queue<Client> _normalQueue = new();
     Queue<Client> _PreferentialQueue = new();
 
@@ -55,27 +55,24 @@ public class QueueService : IQueueService
         if (!_repository.GetAll().Any()) throw new ArgumentException("Nenhum Cliente Aguardando para ser atendido.");
 
         var policy = new CallOrderPolicy();
+        var clients = _repository.GetAll();
 
-        var clientType = policy.CallOrderType(_history, _PreferentialQueue.Any());
+        var clientType = policy.CallOrderType(_history, clients.Any(c => c.ClientType == ClientType.Prioridade));
 
         if (clientType == ClientType.Prioridade)
         {
-            if (_PreferentialQueue.TryDequeue(out var atendidoPriority))
-            {
-                _history.Push(atendidoPriority);
-                contador = 0;
-                return;
-            }
+            var atendido = clients.First(c => c.ClientType == ClientType.Prioridade);
 
-        }
-
-        var filaFinal = new Queue<Client>(_normalQueue.Concat(_PreferentialQueue).OrderBy(c => c.EnQueueTime));
-
-        if (filaFinal.Any())
+            _history.Add(atendido);
+            _repository.Remove(atendido);
+        }else
         {
-            if(filaFinal.TryDequeue(out var client))
-            _history.Push(client);
+            var atendido = clients.First();
+
+            _history.Add(atendido);
+            _repository.Remove(atendido);
         }
+
         
     }
 
@@ -86,20 +83,10 @@ public class QueueService : IQueueService
 
         if (_history.Any())
         {
-            client = _history.Pop();
+            client = _history.First();
 
-            if (client.ClientType == ClientType.Comum)
-            {
-                _normalQueue = new Queue<Client>(new[] { client }.Concat(_normalQueue));
-                if (contador != 0) contador -= 1;
-                return client;
-            }
-            else
-            {
-                _PreferentialQueue = new Queue<Client>(new[] { client }.Concat(_PreferentialQueue));
-                contador = 0;
-                return client;
-            }
+            _repository.Add(client);
+            _history.Remove(client);
 
         }
         return client;
@@ -113,30 +100,7 @@ public class QueueService : IQueueService
         return clients ?? Enumerable.Empty<Client>();
     }
 
-    public IEnumerable<Client> GetHistory() => _history ?? Enumerable.Empty<Client>();
-
-
-    void AddHistory(Client client)
-    {
-        if (client.ClientType == ClientType.Comum)
-        {
-            if (_normalQueue.TryDequeue(out var atendidoNormal))
-            {
-
-                _history.Push(atendidoNormal);
-                contador++;
-            }
-        }
-
-        if (client.ClientType == ClientType.Prioridade)
-        {
-            if (_PreferentialQueue.TryDequeue(out var atendidoPriority))
-            {
-                _history.Push(atendidoPriority);
-                contador = 0;
-            }
-        }
-    }
+    public IEnumerable<Client> GetHistory() => _history.OrderByDescending(c => c.EnQueueTime) ?? Enumerable.Empty<Client>();
 
     public int GetContador()
     {
