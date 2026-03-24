@@ -102,4 +102,27 @@ public class QueueServiceTests
         Assert.Equal("Madry", service.GetHistory().First().Name);
     }
 
+    [Fact]
+    public void CallNext_Should_Call_Priority_After_Three_Normal_Calls()
+    {
+        //Arrange → preparar cenário
+        var service = new QueueService();
+
+        service.Add("Manoel", ClientType.Comum);
+        service.Add("Andryelle", ClientType.Comum);
+        service.Add("Madry", ClientType.Comum);
+        service.Add("Carlos", ClientType.Comum);
+        service.Add("Manoelle", ClientType.Prioridade);
+
+        //Act → executar ação
+        service.CallNext();
+        service.CallNext();
+        service.CallNext();
+        service.CallNext();
+
+        //Assert → verificar resultado
+        
+        Assert.Equal("Manoelle", service.GetHistory().First().Name);
+    }
+
 }
