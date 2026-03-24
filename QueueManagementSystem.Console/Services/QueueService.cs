@@ -65,12 +65,15 @@ public class QueueService : IQueueService
 
             _history.Add(atendido);
             _repository.Remove(atendido);
+
+            if (_history.Count() > 20) _history.RemoveAt(0);
         }else
         {
             var atendido = clients.First();
 
             _history.Add(atendido);
             _repository.Remove(atendido);
+            if (_history.Count() > 20) _history.RemoveAt(0);
         }
 
         
@@ -83,7 +86,7 @@ public class QueueService : IQueueService
 
         if (_history.Any())
         {
-            client = _history.First();
+            client = GetHistory().First();
 
             _repository.Add(client);
             _history.Remove(client);
