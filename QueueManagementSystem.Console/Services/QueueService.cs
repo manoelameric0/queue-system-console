@@ -50,33 +50,39 @@ public class QueueService : IQueueService
 
     }
 
-    public void CallNext()
+    public Client? CallNext()
     {
-        if (!_repository.GetAll().Any()) throw new ArgumentException("Nenhum Cliente Aguardando para ser atendido.");
+        //FINALIZAR O RETORNO DO UNDO PARA APARECER NO MENU!!!
+        Client? client = default;
 
-        var policy = new CallOrderPolicy();
-        var clients = _repository.GetAll();
-
-        var clientType = policy.CallOrderType(_history, clients.Any(c => c.ClientType == ClientType.Prioridade));
-
-        if (clientType == ClientType.Prioridade)
+        if (_repository.GetAll().Any())
         {
-            var atendido = clients.First(c => c.ClientType == ClientType.Prioridade);
+            var policy = new CallOrderPolicy();
+            var clients = _repository.GetAll();
 
-            _history.Add(atendido);
-            _repository.Remove(atendido);
+            var clientType = policy.CallOrderType(_history, clients.Any(c => c.ClientType == ClientType.Prioridade));
 
-            if (_history.Count() > 20) _history.RemoveAt(0);
-        }else
-        {
-            var atendido = clients.First();
+            if (clientType == ClientType.Prioridade)
+            {
+                client = clients.First(c => c.ClientType == ClientType.Prioridade);
 
-            _history.Add(atendido);
-            _repository.Remove(atendido);
-            if (_history.Count() > 20) _history.RemoveAt(0);
+                _history.Add(client);
+                _repository.Remove(client);
+
+                if (_history.Count() > 20) _history.RemoveAt(0);
+            }
+            else
+            {
+                client = clients.First();
+
+                _history.Add(client);
+                _repository.Remove(client);
+                if (_history.Count() > 20) _history.RemoveAt(0);
+            }
+
         }
+        return client;
 
-        
     }
 
     public Client? UndoLastCall()
