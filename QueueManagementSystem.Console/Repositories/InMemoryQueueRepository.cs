@@ -17,7 +17,7 @@ public class InMemoryQueueRepository:IQueueRepository
     public void RestoreClient(Client client) => Add(client);
 
     public IEnumerable<Client> GetAll()
-     => _clientQueue.OrderBy(c => c.EnQueueTime) ?? Enumerable.Empty<Client>();
+     => _clientQueue ?? Enumerable.Empty<Client>();
 
     public bool Exists(string name)
     {
