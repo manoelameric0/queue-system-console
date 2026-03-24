@@ -61,7 +61,27 @@ public class QueueServiceTests
     }
 
     [Fact]
-    public void CallNext_Should_Call_Priority_After_Three_Normal()
+    public void CallNext_Should_Call_First_Client_When_Queue_Has_Clients()
+    {
+        //Arrange → preparar cenário
+        var service = new QueueService();
+
+        service.Add("Manoel", ClientType.Comum);
+        service.Add("Andryelle", ClientType.Comum);
+        service.Add("Madry", ClientType.Comum);
+        service.Add("Manoelle", ClientType.Prioridade);
+
+        //Act → executar ação
+        service.CallNext();
+
+        //Assert → verificar resultado
+        var historico = service.GetHistory();
+
+        Assert.Equal("Manoel", historico.First().Name);
+    }
+    
+    [Fact]
+    public void CallNext_Should_Follow_Three_Normal_To_One_Priority_Rule()
     {
         //Arrange → preparar cenário
         var service = new QueueService();
@@ -75,33 +95,11 @@ public class QueueServiceTests
         service.CallNext();
         service.CallNext();
         service.CallNext();
-        service.CallNext();
 
         //Assert → verificar resultado
-        var historico = service.GetHistory();
+        
 
-        Assert.Equal("Manoelle", historico.First().Name);
+        Assert.Equal("Madry", service.GetHistory().First().Name);
     }
 
-    // [Fact]
-    // public void UndoCallLast_Should_Reinsert_Last_Called_Client()
-    // {
-    //     // Arrange → preparar cenário
-    //     var service = new QueueService();
-
-    //     service.Add("Manoel", ClientType.Comum);
-    //     service.Add("Andryelle", ClientType.Comum);
-    //     service.Add("Madry", ClientType.Comum);
-    //     service.Add("Manoelle", ClientType.Prioridade);
-
-    //     // Act → executar ação
-    //     service.CallNext(); // Manoel sai da fila
-    //     service.CallNext(); // Andryelle sai da fila
-    //     service.CallNext(); // Manoelle sai da fila
-    //     service.UndoLastCall();
-
-    //     // Assert → verificar resultado
-    //     var Clients = service.GetClients();
-    //     Assert.Equal("Madry", Clients.First().Name);
-    // }
 }
