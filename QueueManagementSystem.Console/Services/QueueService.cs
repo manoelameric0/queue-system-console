@@ -103,8 +103,7 @@ public class QueueService : IQueueService
 
     public IEnumerable<Client> GetClients()
     {
-
-        var clients = new Queue<Client>(_normalQueue.Concat(_PreferentialQueue).OrderBy(c => c.EnQueueTime));
+        var clients = _repository.GetAll().OrderBy(c => c.EnQueueTime);
 
         return clients ?? Enumerable.Empty<Client>();
     }
