@@ -152,5 +152,25 @@ public class QueueServiceTests
         Assert.Equal("Manoelle", service.GetHistory().First().Name);
     }
 
+    [Fact]
+    public void UndoLastCall_Should_Reinsert_Last_Called_Client_At_Beginning_Of_Queue()
+    {
+        //Arrange → preparar cenário
+        var service = new QueueService();
+
+        service.Add("Manoel", ClientType.Comum);
+        service.Add("Andryelle", ClientType.Comum);
+        service.Add("Madry", ClientType.Comum);
+
+        service.CallNext();
+        service.CallNext();
+
+        //Act → executar ação
+        service.UndoLastCall();
+
+        //Assert → verificar resultado
+        Assert.Contains(service.GetClients(), c => c.Name == "Andryelle");
+    }
+
 
 }
