@@ -79,7 +79,7 @@ public class QueueServiceTests
 
         Assert.Equal("Manoel", historico.First().Name);
     }
-    
+
     [Fact]
     public void CallNext_Should_Follow_Three_Normal_To_One_Priority_Rule()
     {
@@ -97,7 +97,7 @@ public class QueueServiceTests
         service.CallNext();
 
         //Assert → verificar resultado
-        
+
 
         Assert.Equal("Madry", service.GetHistory().First().Name);
     }
@@ -121,8 +121,24 @@ public class QueueServiceTests
         service.CallNext();
 
         //Assert → verificar resultado
-        
+
         Assert.Equal("Manoelle", service.GetHistory().First().Name);
+    }
+
+    [Fact]
+    public void CallNext_Should_Throw_Exception_When_Queue_Is_Empty()
+    {
+        //Arrange → preparar cenário
+        var service = new QueueService();
+
+        service.Add("Manoel", ClientType.Comum);
+        service.CallNext();
+        
+        //Act → executar ação
+        var exeception = Assert.Throws<ArgumentException>(() => service.CallNext());
+
+        //Assert → verificar resultado
+        Assert.Equal("Nenhum Cliente Aguardando para ser atendido.", exeception.Message);
     }
 
 }
