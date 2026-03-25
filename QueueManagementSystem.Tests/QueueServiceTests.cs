@@ -193,5 +193,22 @@ public class QueueServiceTests
         Assert.True(!service.GetHistory().Any());
     }
 
+    [Fact]
+    public void UndoLastCall_Should_Not_Modify_Queue_When_History_Is_Empty()
+    {
+        //Arrange → preparar cenário
+        var service = new QueueService();
+
+        service.Add("Manoel", ClientType.Comum);
+        service.Add("Andryelle", ClientType.Comum);
+        service.Add("Madry", ClientType.Comum);
+
+        //Act → executar ação
+        service.UndoLastCall();
+
+        //Assert → verificar resultado
+        Assert.Equal(3, service.GetClients().Count());
+    }
+
 
 }
