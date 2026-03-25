@@ -240,5 +240,22 @@ public class QueueServiceTests
         Assert.Equal(3, service.GetClients().Count());
     }
 
+    [Fact]
+    public void GetClients_Should_Return_Empty_When_No_Clients_Exist()
+    {
+        //Arrange → preparar cenário
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
+
+        service.Add("Manoel", ClientType.Comum);
+
+        //Act → executar ação
+        service.CallNext();
+
+
+        //Assert → verificar resultado
+        Assert.Empty(service.GetClients());
+    }
+
 
 }
