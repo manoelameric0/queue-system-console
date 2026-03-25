@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using QueueManagementSystem.Console.Enums;
 using QueueManagementSystem.Console.Policies;
 using QueueManagementSystem.Console.Services;
+using QueueManagementSystem.Console.Repositories;
 
 namespace QueueManagementSystem.Tests;
 
@@ -13,7 +14,8 @@ public class CallOrderPolicyTest
     {
         // Arrange
         var regra = new CallOrderPolicy();
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Comum);
@@ -34,7 +36,8 @@ public class CallOrderPolicyTest
     {
         // Arrange
         var regra = new CallOrderPolicy();
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Comum);
@@ -56,7 +59,8 @@ public class CallOrderPolicyTest
     {
         // Arrange
         var regra = new CallOrderPolicy();
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Comum);
