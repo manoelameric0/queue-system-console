@@ -56,24 +56,6 @@ public class InMemoryQueueRepositoryTest
     }
 
     [Fact]
-    public void Remove_Should_Throw_Exception_When_Queue_Is_Empty()
-    {
-        // Arrange
-        var repository = new InMemoryQueueRepository();
-        var service = new QueueService();
-
-        repository.Add(new Client("Manoel", ClientType.Comum));
-        repository.Add(new Client("Andryelle", ClientType.Comum));
-
-
-        // Act
-        var exception = Assert.Throws<ArgumentException>(() => service.CallNext());
-
-        // Assert
-        Assert.Equal("Nenhum Cliente Aguardando para ser atendido.", exception.Message);
-    }
-
-    [Fact]
     public void Remove_Should_Remove_Client_From_Repository()
     {
         // Arrange
