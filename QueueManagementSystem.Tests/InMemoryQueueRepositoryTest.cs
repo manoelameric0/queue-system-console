@@ -28,7 +28,8 @@ public class InMemoryQueueRepositoryTest
     public void Add_Should_Throw_Exception_When_Client_Is_Duplicated()
     {
         // Arrange
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         service.Add("Manoel", Console.Enums.ClientType.Comum);
 
