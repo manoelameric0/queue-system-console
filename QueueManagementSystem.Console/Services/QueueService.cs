@@ -15,11 +15,7 @@ public class QueueService : IQueueService
     Queue<Client> _PreferentialQueue = new();
 
     private readonly IQueueRepository _repository;
-    public QueueService()
-    {
-        _repository = new InMemoryQueueRepository();
-    }
-    public QueueService(InMemoryQueueRepository repository)
+    public QueueService(IQueueRepository repository)
     {
         _repository = repository;
     }
