@@ -172,5 +172,26 @@ public class QueueServiceTests
         Assert.Contains(service.GetClients(), c => c.Name == "Andryelle");
     }
 
+    [Fact]
+    public void UndoLastCall_Should_Remove_Client_From_History()
+    {
+        //Arrange → preparar cenário
+        var service = new QueueService();
+
+        service.Add("Manoel", ClientType.Comum);
+        service.Add("Andryelle", ClientType.Comum);
+        service.Add("Madry", ClientType.Comum);
+
+        service.CallNext();
+        service.CallNext();
+
+        //Act → executar ação
+        service.UndoLastCall();
+        service.UndoLastCall();
+
+        //Assert → verificar resultado
+        Assert.True(!service.GetHistory().Any());
+    }
+
 
 }
