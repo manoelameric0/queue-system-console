@@ -1,6 +1,7 @@
 ﻿using QueueManagementSystem.Console;
 using QueueManagementSystem.Console.Enums;
 using QueueManagementSystem.Console.Models;
+using QueueManagementSystem.Console.Repositories;
 using QueueManagementSystem.Console.Services;
 namespace QueueManagementSystem.Tests;
 
@@ -9,7 +10,8 @@ public class QueueServiceTests
     [Fact]
     public void Add_Should_Add_Normal_Client_When_Valid()
     {   //Arrange → preparar cenário
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         //Act → executar ação
         service.Add("Manoel", ClientType.Comum);
@@ -22,7 +24,8 @@ public class QueueServiceTests
     [Fact]
     public void Add_Should_Add_Priority_Client_When_Valid()
     {   //Arrange → preparar cenário
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         //Act → executar ação
         service.Add("Manoel", ClientType.Prioridade);
@@ -36,7 +39,8 @@ public class QueueServiceTests
     public void Add_Should_Throw_Exception_When_Client_Is_Duplicated()
     {
         // Given
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         service.Add("Manoel", ClientType.Prioridade);
         // When
@@ -50,7 +54,8 @@ public class QueueServiceTests
     public void Add_Should_Not_Modify_Queue_When_Duplicate_Exception_Is_Thrown()
     {
         // Given
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         service.Add("Manoel", ClientType.Prioridade);
         // When
@@ -64,7 +69,8 @@ public class QueueServiceTests
     public void CallNext_Should_Call_First_Client_When_Queue_Has_Clients()
     {
         //Arrange → preparar cenário
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Comum);
@@ -84,7 +90,8 @@ public class QueueServiceTests
     public void CallNext_Should_Follow_Three_Normal_To_One_Priority_Rule()
     {
         //Arrange → preparar cenário
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Comum);
@@ -106,7 +113,8 @@ public class QueueServiceTests
     public void CallNext_Should_Call_Clients_In_Sequence_Based_On_Arrival_Order()
     {
         //Arrange → preparar cenário
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Prioridade);
@@ -134,7 +142,8 @@ public class QueueServiceTests
     public void CallNext_Should_Call_Priority_After_Three_Normal_Calls()
     {
         //Arrange → preparar cenário
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Comum);
@@ -156,7 +165,8 @@ public class QueueServiceTests
     public void UndoLastCall_Should_Reinsert_Last_Called_Client_At_Beginning_Of_Queue()
     {
         //Arrange → preparar cenário
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Comum);
@@ -176,7 +186,8 @@ public class QueueServiceTests
     public void UndoLastCall_Should_Remove_Client_From_History()
     {
         //Arrange → preparar cenário
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Comum);
@@ -197,7 +208,26 @@ public class QueueServiceTests
     public void UndoLastCall_Should_Not_Modify_Queue_When_History_Is_Empty()
     {
         //Arrange → preparar cenário
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
+
+        service.Add("Manoel", ClientType.Comum);
+        service.Add("Andryelle", ClientType.Comum);
+        service.Add("Madry", ClientType.Comum);
+
+        //Act → executar ação
+        service.UndoLastCall();
+
+        //Assert → verificar resultado
+        Assert.Equal(3, service.GetClients().Count());
+    }
+
+    [Fact]
+    public void GetClients_Should_Return_All_Clients_In_Correct_Order()
+    {
+        //Arrange → preparar cenário
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Comum);
