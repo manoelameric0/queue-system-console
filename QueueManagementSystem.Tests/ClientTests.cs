@@ -1,7 +1,7 @@
 using System;
 using QueueManagementSystem.Console.Services;
 using QueueManagementSystem.Console.Enums;
-using QueueManagementSystem.Console.Models;
+using QueueManagementSystem.Console.Repositories;
 
 namespace QueueManagementSystem.Tests;
 
@@ -11,7 +11,8 @@ public class ClientTests
     public void Client_Should_Create_When_Name_Is_Valid()
     {
         // Arrange
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         // Act
         service.Add("Manoel", ClientType.Comum);
@@ -24,7 +25,8 @@ public class ClientTests
     public void Client_Should_Exception_When_Name_Is_Empty()
     {
         // Arrange
-        var service = new QueueService();
+       var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         ;
         // Act
@@ -38,7 +40,8 @@ public class ClientTests
     public void Client_Should_Exception_When_Name_Is_White_Space()
     {
         // Arrange
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         ;
         // Act
@@ -52,7 +55,8 @@ public class ClientTests
     public void Client_Should_Exception_When_Name_Is_Shorter_Than_Three_Characters()
     {
         // Arrange
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         ;
         // Act
@@ -66,7 +70,8 @@ public class ClientTests
     public void Client_Should_Exception_When_Name_Contains_Number()
     {
         // Arrange
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         ;
         // Act
@@ -80,7 +85,8 @@ public class ClientTests
     public void Client_Should_Set_Type_Correctly_When_Valid()
     {
         // Arrange
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         // Act
         service.Add("Manoel", ClientType.Prioridade);
@@ -93,7 +99,8 @@ public class ClientTests
     public void Client_Should_Throw_Exception_When_Type_Is_Invalid()
     {
         // Arrange
-        var service = new QueueService();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository);
 
         // Act
         var exception = Assert.Throws<ArgumentException>(() => service.Add("Manoel", (ClientType)3));
