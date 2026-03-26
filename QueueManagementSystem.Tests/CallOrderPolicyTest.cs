@@ -71,7 +71,7 @@ public class CallOrderPolicyTest
         service.CallNext();
         service.CallNext();
 
-        var resultado = _policy.CallOrderType(service.GetHistory(), false);
+        var resultado = _policy.CallOrderType(service.GetHistory(), service.HasPrioty());
 
         // Assert
         Assert.Equal(ClientType.Prioridade, resultado);

@@ -12,5 +12,7 @@ public interface IQueueService
     IEnumerable<Client> GetClients();
     IEnumerable<Client> GetHistory();
     bool HasPrioty();
+    bool HasClients();
+    bool HasHistory();
 
 }

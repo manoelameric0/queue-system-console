@@ -32,20 +32,19 @@ public class Menu
             System.Console.WriteLine("");
 
             var clients = _service.GetClients();
-
-            var tresUltimosAtendidos = _service.GetHistory().TakeLast(3).Count(c => c.ClientType == ClientType.Comum);
-            if (tresUltimosAtendidos < 3)
+            var ClientType = _policy.CallOrderType(_service.GetHistory(), _service.HasPrioty());
+            if (ClientType != ClientType.Prioridade)
             {
                 var client = clients.FirstOrDefault();
 
                 System.Console.WriteLine(client != null ? $"[ Client atual: {client.Name} ({client.ClientType}) | Hora de chegada: {client.EnQueueTime:HH:mm:ss} ]" : "[ Nenhum cliente em atendimento ]");
-            }
-            if (_service.HasPrioty())
+            }else
             {
                 var client = clients.FirstOrDefault(c => c.ClientType == ClientType.Prioridade);
 
                 System.Console.WriteLine(client != null ? $"[ Client atual: {client.Name} ({client.ClientType}) | Hora de chegada: {client.EnQueueTime:HH:mm:ss} ]" : "[ Nenhum cliente em atendimento ]");
             }
+            
             System.Console.WriteLine("");
             System.Console.WriteLine("----------------------------------------");
             System.Console.WriteLine("Selecione uma opção:");
@@ -151,7 +150,7 @@ public class Menu
 
     public void CallNext()
     {
-        if (!_service.GetClients().Any())
+        if (!_service.HasClients())
         {
             ShowError("\nNenhum Cliente em Espera!");
             System.Console.WriteLine("\n----------------------------------------");
@@ -164,7 +163,7 @@ public class Menu
 
     public void UndoLastCall()
     {
-        if (!_service.GetHistory().Any())
+        if (!_service.HasHistory())
         {
             ShowError("\nNenhum Cliente Atendido até o momento!");
             System.Console.WriteLine("\n----------------------------------------");
@@ -188,12 +187,13 @@ public class Menu
         ShowInfo("         FILAS E HISTÓRICO");
         System.Console.WriteLine("========================================");
         System.Console.WriteLine("");
-
-        var clientsComum = _service.GetClients().Where(c => c.ClientType == ClientType.Comum);
-        var clientsPriority = _service.GetClients().Where(c => c.ClientType == ClientType.Prioridade);
+        
+        var clients = _service.GetClients();
+        var clientsComum = clients.Where(c => c.ClientType == ClientType.Comum);
+        var clientsPriority = clients.Where(c => c.ClientType == ClientType.Prioridade);
         var history = _service.GetHistory();
 
-        if (!clientsComum.Any() && !clientsPriority.Any() && !history.Any()) ShowInfo("Nenhum Cliente Atendido até o Momento");
+        if (!clientsComum.Any() && !clientsPriority.Any() && !_service.HasHistory()) ShowInfo("Nenhum Cliente Atendido até o Momento");
 
 
         if (clientsComum.Any())
@@ -215,7 +215,7 @@ public class Menu
         }
 
 
-        if (history.Any())
+        if (_service.HasHistory())
         {
             ShowInfo("\nHistórico de atendimentos:");
             foreach (var client in history)

@@ -9,7 +9,6 @@ namespace QueueManagementSystem.Console.Services;
 
 public class QueueService : IQueueService
 {
-    int contador = 0;
     List<Client> _history = new();
 
     private readonly IQueueRepository _repository;
@@ -93,5 +92,7 @@ public class QueueService : IQueueService
     public IEnumerable<Client> GetHistory() => _history.OrderByDescending(c => c.EnQueueTime) ?? Enumerable.Empty<Client>();
 
     public bool HasPrioty() => _repository.GetAll().Any(c => c.ClientType == ClientType.Prioridade);
+    public bool HasClients() => _repository.GetAll().Any();
+    public bool HasHistory() => _history.Any();
     
 }
