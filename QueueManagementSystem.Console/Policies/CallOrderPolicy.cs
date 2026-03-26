@@ -4,7 +4,7 @@ using QueueManagementSystem.Console.Models;
 
 namespace QueueManagementSystem.Console.Policies;
 
-public class CallOrderPolicy
+public class CallOrderPolicy : ICallOrderPolicy
 {
    public ClientType CallOrderType(IEnumerable<Client> clients, bool havePriority)
     {

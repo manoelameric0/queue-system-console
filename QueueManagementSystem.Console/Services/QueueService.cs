@@ -11,13 +11,13 @@ public class QueueService : IQueueService
 {
     int contador = 0;
     List<Client> _history = new();
-    Queue<Client> _normalQueue = new();
-    Queue<Client> _PreferentialQueue = new();
 
     private readonly IQueueRepository _repository;
-    public QueueService(IQueueRepository repository)
+    private readonly ICallOrderPolicy _policy;
+    public QueueService(IQueueRepository repository, ICallOrderPolicy policy)
     {
         _repository = repository;
+        _policy = policy;
     }
 
 
@@ -26,18 +26,6 @@ public class QueueService : IQueueService
         if (_repository.Exists(name))
         {
             throw new ArgumentException("Cliente já está na Fila");
-        }
-
-        //adiciona os cliente Comuns
-        if (type == ClientType.Comum)
-        {
-            _normalQueue.Enqueue(new Client(name: name, clientType: type));
-        }
-
-        //adiciona  os clientes Prioridade
-        if (type == ClientType.Prioridade)
-        {
-            _PreferentialQueue.Enqueue(new Client(name: name, clientType: type));
         }
 
         //adiciona todos os clientes no repository
@@ -50,13 +38,11 @@ public class QueueService : IQueueService
     {
         //FINALIZAR O RETORNO DO UNDO PARA APARECER NO MENU!!!
         Client? client = default;
+        var clients = _repository.GetAll();
 
-        if (_repository.GetAll().Any())
+        if (clients.Any())
         {
-            var policy = new CallOrderPolicy();
-            var clients = _repository.GetAll();
-
-            var clientType = policy.CallOrderType(_history, clients.Any(c => c.ClientType == ClientType.Prioridade));
+            var clientType = _policy.CallOrderType(_history, clients.Any(c => c.ClientType == ClientType.Prioridade));
 
             if (clientType == ClientType.Prioridade)
             {
@@ -106,9 +92,5 @@ public class QueueService : IQueueService
 
     public IEnumerable<Client> GetHistory() => _history.OrderByDescending(c => c.EnQueueTime) ?? Enumerable.Empty<Client>();
 
-    public int GetContador()
-    {
-        return contador;
-    }
 
 }

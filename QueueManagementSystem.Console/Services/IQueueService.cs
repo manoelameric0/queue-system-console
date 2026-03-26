@@ -11,6 +11,5 @@ public interface IQueueService
     Client? UndoLastCall();
     IEnumerable<Client> GetClients();
     IEnumerable<Client> GetHistory();
-    int GetContador();
 
 }
