@@ -33,10 +33,8 @@ public class QueueService : IQueueService
 
     }
 
-    public Client? CallNext()
+    public void CallNext()
     {
-        //FINALIZAR O RETORNO DO UNDO PARA APARECER NO MENU!!!
-        Client? client = default;
         var clients = _repository.GetAll();
 
         if (clients.Any())
@@ -45,7 +43,7 @@ public class QueueService : IQueueService
 
             if (clientType == ClientType.Prioridade)
             {
-                client = clients.First(c => c.ClientType == ClientType.Prioridade);
+                var client = clients.First(c => c.ClientType == ClientType.Prioridade);
 
                 _history.Add(client);
                 _repository.Remove(client);
@@ -54,7 +52,7 @@ public class QueueService : IQueueService
             }
             else
             {
-                client = clients.First();
+                var client = clients.First();
 
                 _history.Add(client);
                 _repository.Remove(client);
@@ -62,7 +60,6 @@ public class QueueService : IQueueService
             }
 
         }
-        return client;
 
     }
 
@@ -94,5 +91,11 @@ public class QueueService : IQueueService
     public bool HasPrioty() => _repository.GetAll().Any(c => c.ClientType == ClientType.Prioridade);
     public bool HasClients() => _repository.GetAll().Any();
     public bool HasHistory() => _history.Any();
+    public Client? GetPreview()
+    {
+        var clients = _repository.GetAll();
+        
+        
+    }
     
 }

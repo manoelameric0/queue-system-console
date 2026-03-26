@@ -7,12 +7,13 @@ namespace QueueManagementSystem.Console.Services;
 public interface IQueueService
 {
     void Add(string name, ClientType type);
-    Client? CallNext();
+    void CallNext();
     Client? UndoLastCall();
     IEnumerable<Client> GetClients();
     IEnumerable<Client> GetHistory();
     bool HasPrioty();
     bool HasClients();
     bool HasHistory();
+    Client? GetPreview();
 
 }
