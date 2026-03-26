@@ -1,5 +1,6 @@
 using System;
 using QueueManagementSystem.Console.Enums;
+using QueueManagementSystem.Console.Policies;
 using QueueManagementSystem.Console.Models;
 using QueueManagementSystem.Console.Repositories;
 using QueueManagementSystem.Console.Services;
@@ -29,7 +30,8 @@ public class InMemoryQueueRepositoryTest
     {
         // Arrange
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+         var _policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, _policy);
 
         service.Add("Manoel", Console.Enums.ClientType.Comum);
 
@@ -44,8 +46,9 @@ public class InMemoryQueueRepositoryTest
     public void Add_Should_Not_Add_Client_When_Duplicate_Exception_Is_Thrown()
     {
         // Arrange
-        var repository = new InMemoryQueueRepository();
-        var service = new QueueService(repository);
+        var _repository = new InMemoryQueueRepository();
+         var _policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, _policy);
 
         service.Add("Manoel", ClientType.Comum);
 
@@ -53,7 +56,7 @@ public class InMemoryQueueRepositoryTest
         var exception = Assert.Throws<ArgumentException>(() => service.Add("Manoel", ClientType.Comum));
 
         // Assert
-        Assert.Single(repository.GetAll());
+        Assert.Single(_repository.GetAll());
     }
 
     [Fact]

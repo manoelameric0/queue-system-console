@@ -10,12 +10,12 @@ namespace QueueManagementSystem.Tests;
 public class CallOrderPolicyTest
 {
     [Fact]
-    public void Policy_Should_Return_Normal_When_Counter_Is_Less_Than_Three()
+    public void Policy_Should_Return_Normal_When_History_Has_Less_Than_Three_Clients()
     {
         // Arrange
-        var regra = new CallOrderPolicy();
+        var _policy = new CallOrderPolicy();
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var service = new QueueService(_repository, _policy);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Comum);
@@ -25,19 +25,42 @@ public class CallOrderPolicyTest
         service.CallNext();
         service.CallNext();
 
-        var resultado = regra.CallOrderType(service.GetHistory(), true);
+        var resultado = _policy.CallOrderType(service.GetHistory(), true);
 
         // Assert
         Assert.Equal(ClientType.Comum, resultado);
     }
 
     [Fact]
-    public void Policy_Should_Return_Priority_When_Counter_Is_Three()
+    public void Policy_Should_Return_Normal_When_Last_Three_Are_Not_All_Normal()
     {
         // Arrange
-        var regra = new CallOrderPolicy();
+        var _policy = new CallOrderPolicy();
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var service = new QueueService(_repository, _policy);
+
+        service.Add("Manoel", ClientType.Comum);
+        service.Add("Andryelle", ClientType.Prioridade);
+        service.Add("Madry", ClientType.Comum);
+        service.Add("Manoelle", ClientType.Prioridade);
+        // Act
+        service.CallNext();
+        service.CallNext();
+        service.CallNext();
+
+        var resultado = _policy.CallOrderType(service.GetHistory(), true);
+
+        // Assert
+        Assert.Equal(ClientType.Comum, resultado);
+    }
+
+    [Fact]
+    public void Policy_Should_Return_Priority_When_Last_Three_Are_All_Normal()
+    {
+        // Arrange
+        var _policy = new CallOrderPolicy();
+        var _repository = new InMemoryQueueRepository();
+        var service = new QueueService(_repository, _policy);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Comum);
@@ -48,33 +71,9 @@ public class CallOrderPolicyTest
         service.CallNext();
         service.CallNext();
 
-        var resultado = regra.CallOrderType(service.GetHistory(), true);
+        var resultado = _policy.CallOrderType(service.GetHistory(), false);
 
         // Assert
         Assert.Equal(ClientType.Prioridade, resultado);
-    }
-
-    [Fact]
-    public void Policy_Should_Keep_Returning_Normal_When_No_Priority_Clients()
-    {
-        // Arrange
-        var regra = new CallOrderPolicy();
-        var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
-
-        service.Add("Manoel", ClientType.Comum);
-        service.Add("Andryelle", ClientType.Comum);
-        service.Add("Madry", ClientType.Comum);
-        service.Add("Manoelle", ClientType.Comum);
-        // Act
-        service.CallNext();
-        service.CallNext();
-        service.CallNext();
-        service.CallNext();
-
-        var resultado = regra.CallOrderType(service.GetHistory(), false);
-
-        // Assert
-        Assert.Equal(ClientType.Comum, resultado);
     }
 }

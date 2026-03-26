@@ -2,6 +2,7 @@ using System;
 using QueueManagementSystem.Console.Services;
 using QueueManagementSystem.Console.Enums;
 using QueueManagementSystem.Console.Repositories;
+using QueueManagementSystem.Console.Policies;
 
 namespace QueueManagementSystem.Tests;
 
@@ -12,7 +13,8 @@ public class ClientTests
     {
         // Arrange
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var _policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, _policy);
 
         // Act
         service.Add("Manoel", ClientType.Comum);
@@ -25,8 +27,9 @@ public class ClientTests
     public void Client_Should_Exception_When_Name_Is_Empty()
     {
         // Arrange
-       var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var _repository = new InMemoryQueueRepository();
+        var _policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, _policy);
 
         ;
         // Act
@@ -41,7 +44,8 @@ public class ClientTests
     {
         // Arrange
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var _policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, _policy);
 
         ;
         // Act
@@ -56,9 +60,9 @@ public class ClientTests
     {
         // Arrange
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var _policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, _policy);
 
-        ;
         // Act
         var exception = Assert.Throws<ArgumentException>(() => service.Add("Ma", ClientType.Comum));
 
@@ -71,7 +75,8 @@ public class ClientTests
     {
         // Arrange
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var _policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, _policy);
 
         ;
         // Act
@@ -86,7 +91,8 @@ public class ClientTests
     {
         // Arrange
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var _policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, _policy);
 
         // Act
         service.Add("Manoel", ClientType.Prioridade);
@@ -100,7 +106,8 @@ public class ClientTests
     {
         // Arrange
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var _policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, _policy);
 
         // Act
         var exception = Assert.Throws<ArgumentException>(() => service.Add("Manoel", (ClientType)3));

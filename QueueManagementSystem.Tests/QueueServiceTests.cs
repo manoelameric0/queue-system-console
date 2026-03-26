@@ -1,6 +1,6 @@
 ﻿using QueueManagementSystem.Console;
 using QueueManagementSystem.Console.Enums;
-using QueueManagementSystem.Console.Models;
+using QueueManagementSystem.Console.Policies;
 using QueueManagementSystem.Console.Repositories;
 using QueueManagementSystem.Console.Services;
 namespace QueueManagementSystem.Tests;
@@ -11,7 +11,8 @@ public class QueueServiceTests
     public void Add_Should_Add_Normal_Client_When_Valid()
     {   //Arrange → preparar cenário
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, policy);
 
         //Act → executar ação
         service.Add("Manoel", ClientType.Comum);
@@ -25,7 +26,8 @@ public class QueueServiceTests
     public void Add_Should_Add_Priority_Client_When_Valid()
     {   //Arrange → preparar cenário
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, policy);
 
         //Act → executar ação
         service.Add("Manoel", ClientType.Prioridade);
@@ -40,7 +42,8 @@ public class QueueServiceTests
     {
         // Given
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, policy);
 
         service.Add("Manoel", ClientType.Prioridade);
         // When
@@ -55,7 +58,8 @@ public class QueueServiceTests
     {
         // Given
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, policy);
 
         service.Add("Manoel", ClientType.Prioridade);
         // When
@@ -70,7 +74,8 @@ public class QueueServiceTests
     {
         //Arrange → preparar cenário
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, policy);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Comum);
@@ -91,7 +96,8 @@ public class QueueServiceTests
     {
         //Arrange → preparar cenário
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, policy);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Comum);
@@ -114,7 +120,8 @@ public class QueueServiceTests
     {
         //Arrange → preparar cenário
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, policy);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Prioridade);
@@ -143,7 +150,8 @@ public class QueueServiceTests
     {
         //Arrange → preparar cenário
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, policy);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Comum);
@@ -166,7 +174,8 @@ public class QueueServiceTests
     {
         //Arrange → preparar cenário
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, policy);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Comum);
@@ -187,7 +196,8 @@ public class QueueServiceTests
     {
         //Arrange → preparar cenário
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, policy);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Comum);
@@ -209,7 +219,8 @@ public class QueueServiceTests
     {
         //Arrange → preparar cenário
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, policy);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Comum);
@@ -227,7 +238,8 @@ public class QueueServiceTests
     {
         //Arrange → preparar cenário
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, policy);
 
         service.Add("Manoel", ClientType.Comum);
         service.Add("Andryelle", ClientType.Comum);
@@ -245,7 +257,8 @@ public class QueueServiceTests
     {
         //Arrange → preparar cenário
         var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository);
+        var policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, policy);
 
         service.Add("Manoel", ClientType.Comum);
 
