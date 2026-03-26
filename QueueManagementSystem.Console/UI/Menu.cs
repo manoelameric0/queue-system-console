@@ -91,6 +91,9 @@ public class Menu
                     return;
                 default:
                     ShowError("\nOpção Inválida \n");
+                    System.Console.WriteLine("\n----------------------------------------");
+                        System.Console.Write("Pressione [Qualquer Tecla] para voltar");
+                        System.Console.ReadKey();
                     break;
             }
 
