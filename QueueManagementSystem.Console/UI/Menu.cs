@@ -2,33 +2,47 @@ using System;
 using Microsoft.VisualBasic;
 using QueueManagementSystem.Console.Enums;
 using QueueManagementSystem.Console.Models;
+using QueueManagementSystem.Console.Policies;
 using QueueManagementSystem.Console.Services;
 
 namespace QueueManagementSystem.Console.UI;
 
+
 public class Menu
 {
 
-    public void Executar(IQueueService service)
+    private readonly IQueueService _service;
+    private readonly ICallOrderPolicy _policy;
+
+    public Menu(IQueueService service, ICallOrderPolicy policy)
+    {
+        _service = service;
+        _policy = policy;
+    }
+    public void Executar()
     {
 
         while (true)
         {
             //MENU RUNNING
             System.Console.Clear();
-            System.Console.WriteLine($"[{service.GetContador()}]=====================================");
+            System.Console.WriteLine("========================================");
             ShowInfo("    SISTEMA DE GERENCIAMENTO DE FILA    ");
             System.Console.WriteLine("========================================");
             System.Console.WriteLine("");
-            if (service.GetContador() < 3)
+
+            var clients = _service.GetClients();
+
+            var tresUltimosAtendidos = _service.GetHistory().TakeLast(3).Count(c => c.ClientType == ClientType.Comum);
+            if (tresUltimosAtendidos < 3)
             {
-                var client = service.GetClients().FirstOrDefault();
+                var client = clients.FirstOrDefault();
 
                 System.Console.WriteLine(client != null ? $"[ Client atual: {client.Name} ({client.ClientType}) | Hora de chegada: {client.EnQueueTime:HH:mm:ss} ]" : "[ Nenhum cliente em atendimento ]");
             }
-            if (service.GetContador() >= 3)
+            if (_service.HasPrioty())
             {
-                var client = service.GetClients().FirstOrDefault(c => c.ClientType == ClientType.Prioridade);
+                var client = clients.FirstOrDefault(c => c.ClientType == ClientType.Prioridade);
 
                 System.Console.WriteLine(client != null ? $"[ Client atual: {client.Name} ({client.ClientType}) | Hora de chegada: {client.EnQueueTime:HH:mm:ss} ]" : "[ Nenhum cliente em atendimento ]");
             }
@@ -51,7 +65,7 @@ public class Menu
                 case MenuOption.Add:
                     try
                     {
-                        AddClient(service);
+                        AddClient();
                     }
                     catch (ArgumentException ex)
                     {
@@ -63,15 +77,15 @@ public class Menu
                     break;
 
                 case MenuOption.CallNext:
-                    CallNext(service);
+                    CallNext();
                     break;
 
                 case MenuOption.UndoLastCall:
-                    UndoLastCall(service);
+                    UndoLastCall();
                     break;
 
                 case MenuOption.DisplayAll:
-                    DisplayHistoryClients(service);
+                    DisplayHistoryClients();
                     break;
 
                 case MenuOption.Exit:
@@ -86,7 +100,7 @@ public class Menu
 
     }
     //validações
-    static int ReadInt()
+    public int ReadInt()
     {
         int option;
         while (!int.TryParse(System.Console.ReadLine(), out option) || option < 0)
@@ -98,7 +112,7 @@ public class Menu
         return option;
     }
 
-    static string ReadString()
+    public string ReadString()
     {
         string input = System.Console.ReadLine() ?? string.Empty;
         while (string.IsNullOrWhiteSpace(input) || input.Any(char.IsDigit))
@@ -112,7 +126,7 @@ public class Menu
     }
 
     //Ações de Console
-    static void AddClient(IQueueService service)
+    public void AddClient()
     {
         System.Console.Clear();
         System.Console.WriteLine("========================================");
@@ -127,46 +141,47 @@ public class Menu
         System.Console.Write("Digite sua escolha: ");
         int priority = ReadInt();
 
-        service.Add(nome, (ClientType)priority);
+
+        _service.Add(nome, (ClientType)priority);
         ShowSuccess($"{nome} Adicionado a Fila");
         System.Console.WriteLine("\n----------------------------------------");
         System.Console.Write("Pressione [Qualquer Tecla] para voltar");
         System.Console.ReadKey();
     }
 
-    static void CallNext(IQueueService service)
+    public void CallNext()
     {
-        if (!service.GetClients().Any())
+        if (!_service.GetClients().Any())
         {
             ShowError("\nNenhum Cliente em Espera!");
             System.Console.WriteLine("\n----------------------------------------");
             System.Console.Write("Pressione [Qualquer Tecla] para voltar");
             System.Console.ReadKey();
+            return;
         }
-        service.CallNext();
+        _service.CallNext();
     }
 
-    static void UndoLastCall(IQueueService service)
+    public void UndoLastCall()
     {
-        if (!service.GetHistory().Any())
+        if (!_service.GetHistory().Any())
         {
             ShowError("\nNenhum Cliente Atendido até o momento!");
             System.Console.WriteLine("\n----------------------------------------");
             System.Console.Write("Pressione [Qualquer Tecla] para voltar");
             System.Console.ReadKey();
+            return;
         }
 
-        if (service.GetHistory().Any())
-        {
-            var client = service.UndoLastCall();
-            ShowSuccess($"{client!.Name} de volta a fila.");
-            System.Console.WriteLine("\n----------------------------------------");
-            System.Console.Write("Pressione [Qualquer Tecla] para voltar");
-            System.Console.ReadKey();
-        }
+        var client = _service.UndoLastCall();
+        ShowSuccess($"{client!.Name} de volta a fila.");
+        System.Console.WriteLine("\n----------------------------------------");
+        System.Console.Write("Pressione [Qualquer Tecla] para voltar");
+        System.Console.ReadKey();
+
     }
 
-    static void DisplayHistoryClients(IQueueService service)
+    public void DisplayHistoryClients()
     {
         System.Console.Clear();
         System.Console.WriteLine("========================================");
@@ -174,16 +189,16 @@ public class Menu
         System.Console.WriteLine("========================================");
         System.Console.WriteLine("");
 
-        var clientsComum = service.GetClients().Where(c => c.ClientType == ClientType.Comum);
-        var clientsPriority = service.GetClients().Where(c => c.ClientType == ClientType.Prioridade);
-        var history = service.GetHistory();
+        var clientsComum = _service.GetClients().Where(c => c.ClientType == ClientType.Comum);
+        var clientsPriority = _service.GetClients().Where(c => c.ClientType == ClientType.Prioridade);
+        var history = _service.GetHistory();
 
         if (!clientsComum.Any() && !clientsPriority.Any() && !history.Any()) ShowInfo("Nenhum Cliente Atendido até o Momento");
 
 
         if (clientsComum.Any())
         {
-            ShowInfo("Fila Comum:");
+            ShowInfo("\nFila Comum:");
             foreach (var client in clientsComum)
             {
                 System.Console.WriteLine($"- {client.Name} | Horario de Chegada: {client.EnQueueTime:HH:mm:ss}");
@@ -192,7 +207,7 @@ public class Menu
 
         if (clientsPriority.Any())
         {
-            ShowInfo("Fila Preferencial:");
+            ShowInfo("\nFila Preferencial:");
             foreach (var client in clientsPriority)
             {
                 System.Console.WriteLine($"- {client.Name} | Horario de Chegada: {client.EnQueueTime:HH:mm:ss}");
@@ -202,7 +217,7 @@ public class Menu
 
         if (history.Any())
         {
-            ShowInfo("Histórico de atendimentos:");
+            ShowInfo("\nHistórico de atendimentos:");
             foreach (var client in history)
             {
                 System.Console.WriteLine($"- {client.Name} ({client.ClientType}) | Hora de Chegada: {client.EnQueueTime:HH:mm:ss}");
@@ -214,19 +229,19 @@ public class Menu
         System.Console.ReadKey();
     }
 
-    static void ShowError(string message)
+    public void ShowError(string message)
     {
         System.Console.ForegroundColor = ConsoleColor.Red;
         System.Console.WriteLine(message);
         System.Console.ResetColor();
     }
-    static void ShowSuccess(string message)
+    public void ShowSuccess(string message)
     {
         System.Console.ForegroundColor = ConsoleColor.Green;
         System.Console.WriteLine(message);
         System.Console.ResetColor();
     }
-    static void ShowInfo(string message)
+    public void ShowInfo(string message)
     {
         System.Console.ForegroundColor = ConsoleColor.Yellow;
         System.Console.WriteLine(message);
