@@ -94,7 +94,9 @@ public class QueueService : IQueueService
     public Client? GetPreview()
     {
         var clients = _repository.GetAll();
-        
+        var type = _policy.CallOrderType(_history, HasPrioty());
+
+        return type == ClientType.Prioridade ? clients.FirstOrDefault(c => c.ClientType == ClientType.Prioridade) : clients.FirstOrDefault();
         
     }
     
