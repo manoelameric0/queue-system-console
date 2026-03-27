@@ -31,20 +31,9 @@ public class Menu
             System.Console.WriteLine("========================================");
             System.Console.WriteLine("");
 
-            var clients = _service.GetClients();
-            var ClientType = _policy.CallOrderType(_service.GetHistory(), _service.HasPrioty());
-            if (ClientType != ClientType.Prioridade)
-            {
-                var client = clients.FirstOrDefault();
+            var client = _service.GetPreview();
+            System.Console.WriteLine(client != null ? $"[ Client atual: {client.Name} ({client.ClientType}) | Hora de chegada: {client.EnQueueTime:HH:mm:ss} ]" : "[ Nenhum cliente em atendimento ]");
 
-                System.Console.WriteLine(client != null ? $"[ Client atual: {client.Name} ({client.ClientType}) | Hora de chegada: {client.EnQueueTime:HH:mm:ss} ]" : "[ Nenhum cliente em atendimento ]");
-            }else
-            {
-                var client = clients.FirstOrDefault(c => c.ClientType == ClientType.Prioridade);
-
-                System.Console.WriteLine(client != null ? $"[ Client atual: {client.Name} ({client.ClientType}) | Hora de chegada: {client.EnQueueTime:HH:mm:ss} ]" : "[ Nenhum cliente em atendimento ]");
-            }
-            
             System.Console.WriteLine("");
             System.Console.WriteLine("----------------------------------------");
             System.Console.WriteLine("Selecione uma opção:");
@@ -92,8 +81,8 @@ public class Menu
                 default:
                     ShowError("\nOpção Inválida \n");
                     System.Console.WriteLine("\n----------------------------------------");
-                        System.Console.Write("Pressione [Qualquer Tecla] para voltar");
-                        System.Console.ReadKey();
+                    System.Console.Write("Pressione [Qualquer Tecla] para voltar");
+                    System.Console.ReadKey();
                     break;
             }
 
@@ -190,7 +179,7 @@ public class Menu
         ShowInfo("         FILAS E HISTÓRICO");
         System.Console.WriteLine("========================================");
         System.Console.WriteLine("");
-        
+
         var clients = _service.GetClients();
         var clientsComum = clients.Where(c => c.ClientType == ClientType.Comum);
         var clientsPriority = clients.Where(c => c.ClientType == ClientType.Prioridade);
@@ -227,7 +216,7 @@ public class Menu
             }
         }
 
-        System.Console.WriteLine("----------------------------------------");
+        System.Console.WriteLine("\n\n----------------------------------------");
         System.Console.Write("Pressione [Qualquer Tecla] para voltar");
         System.Console.ReadKey();
     }
