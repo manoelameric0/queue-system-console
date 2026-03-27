@@ -35,7 +35,7 @@ public class QueueService : IQueueService
 
     public void CallNext()
     {
-        var clients = _repository.GetAll();
+        var clients = GetClients();
 
         if (clients.Any())
         {
@@ -70,7 +70,7 @@ public class QueueService : IQueueService
 
         if (_history.Any())
         {
-            client = GetHistory().First();
+            client = GetHistory().Last();
 
             _repository.Add(client);
             _history.Remove(client);
@@ -86,14 +86,14 @@ public class QueueService : IQueueService
         return clients ?? Enumerable.Empty<Client>();
     }
 
-    public IEnumerable<Client> GetHistory() => _history.OrderByDescending(c => c.EnQueueTime) ?? Enumerable.Empty<Client>();
+    public IEnumerable<Client> GetHistory() => _history ?? Enumerable.Empty<Client>();
 
     public bool HasPrioty() => _repository.GetAll().Any(c => c.ClientType == ClientType.Prioridade);
     public bool HasClients() => _repository.GetAll().Any();
     public bool HasHistory() => _history.Any();
     public Client? GetPreview()
     {
-        var clients = _repository.GetAll();
+        var clients = GetClients();
         var type = _policy.CallOrderType(_history, HasPrioty());
 
         return type == ClientType.Prioridade ? clients.FirstOrDefault(c => c.ClientType == ClientType.Prioridade) : clients.FirstOrDefault();

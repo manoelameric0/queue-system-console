@@ -181,11 +181,13 @@ public class Menu
         System.Console.WriteLine("");
 
         var clients = _service.GetClients();
+        var hasClients = clients.Any();
         var clientsComum = clients.Where(c => c.ClientType == ClientType.Comum);
         var clientsPriority = clients.Where(c => c.ClientType == ClientType.Prioridade);
         var history = _service.GetHistory();
+        var hasHistory = history.Any();
 
-        if (!clientsComum.Any() && !clientsPriority.Any() && !_service.HasHistory()) ShowInfo("Nenhum Cliente Atendido até o Momento");
+        if (!hasClients && !hasHistory) ShowInfo("Nenhum Cliente Atendido até o Momento");
 
 
         if (clientsComum.Any())
@@ -207,7 +209,7 @@ public class Menu
         }
 
 
-        if (_service.HasHistory())
+        if (hasHistory)
         {
             ShowInfo("\nHistórico de atendimentos:");
             foreach (var client in history)
@@ -219,6 +221,7 @@ public class Menu
         System.Console.WriteLine("\n\n----------------------------------------");
         System.Console.Write("Pressione [Qualquer Tecla] para voltar");
         System.Console.ReadKey();
+        System.Console.Clear();
     }
 
     public void ShowError(string message)
