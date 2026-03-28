@@ -3,6 +3,7 @@ using QueueManagementSystem.Console.Services;
 using QueueManagementSystem.Console.Enums;
 using QueueManagementSystem.Console.Repositories;
 using QueueManagementSystem.Console.Policies;
+using QueueManagementSystem.Console.Models;
 
 namespace QueueManagementSystem.Tests;
 
@@ -114,5 +115,22 @@ public class ClientTests
 
         // Assert
         Assert.Equal("Tipo de cliente inválido.", exception.Message);
+    }
+
+    [Fact]
+    public void Client_Should_Add_CallTime_When_CallNext_Is_Called()
+    {
+        // Arrange
+        var _repository = new InMemoryQueueRepository();
+        var _policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, _policy);
+
+        service.Add("Manoel", ClientType.Comum);
+        // Act
+        service.CallNext();
+        var client = service.GetHistory().First();
+
+        // Assert
+        Assert.NotNull(client.CallTime);
     }
 }
