@@ -133,4 +133,23 @@ public class ClientTests
         // Assert
         Assert.NotNull(client.CallTime);
     }
+
+    [Fact]
+    public void Client_Should_Add_CallTime_Correct_When_CallNext_Is_Called()
+    {
+        // Arrange
+        var _repository = new InMemoryQueueRepository();
+        var _policy = new CallOrderPolicy();
+        var service = new QueueService(_repository, _policy);
+
+        service.Add("Manoel", ClientType.Comum);
+        // Act
+        var older = DateTime.Now;
+        service.CallNext();
+        var client = service.GetHistory().First();
+        var after = DateTime.Now;
+
+        // Assert
+        Assert.True(client.CallTime >= older && client.CallTime <= after);
+    }
 }
