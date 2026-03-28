@@ -112,7 +112,7 @@ public class QueueServiceTests
         //Assert → verificar resultado
 
 
-        Assert.Equal("Madry", service.GetHistory().First().Name);
+        Assert.Equal("Madry", service.GetHistory().Last().Name);
     }
 
     [Fact]
@@ -142,7 +142,7 @@ public class QueueServiceTests
         //Assert → verificar resultado
 
 
-        Assert.Equal("Manoelle", service.GetHistory().First().Name);
+        Assert.Equal("Manoelle", service.GetHistory().Last().Name);
     }
 
     [Fact]
@@ -166,7 +166,7 @@ public class QueueServiceTests
         service.CallNext();
 
         //Assert → verificar resultado
-        Assert.Equal("Manoelle", service.GetHistory().First().Name);
+        Assert.Equal("Manoelle", service.GetHistory().Last().Name);
     }
 
     [Fact]
