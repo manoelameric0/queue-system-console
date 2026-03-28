@@ -4,76 +4,91 @@ using QueueManagementSystem.Console.Enums;
 using QueueManagementSystem.Console.Policies;
 using QueueManagementSystem.Console.Services;
 using QueueManagementSystem.Console.Repositories;
+using QueueManagementSystem.Console.Models;
 
 namespace QueueManagementSystem.Tests;
 
 public class CallOrderPolicyTest
 {
-    [Fact]
-    public void Policy_Should_Return_Normal_When_History_Has_Less_Than_Three_Clients()
-    {
-        // Arrange
-        var _policy = new CallOrderPolicy();
-        var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository, _policy);
-
-        service.Add("Manoel", ClientType.Comum);
-        service.Add("Andryelle", ClientType.Comum);
-        service.Add("Madry", ClientType.Comum);
-        service.Add("Suh", ClientType.Prioridade);
-        // Act
-        service.CallNext();
-        service.CallNext();
-
-        var resultado = _policy.CallOrderType(service.GetHistory(), true);
-
-        // Assert
-        Assert.Equal(ClientType.Comum, resultado);
-    }
+    private readonly CallOrderPolicy _policy = new();
 
     [Fact]
-    public void Policy_Should_Return_Normal_When_Last_Three_Are_Not_All_Normal()
+    public void CallOrderType_WithLast3AllCommon_AndPriorityExists_ReturnsPriority()
     {
         // Arrange
-        var _policy = new CallOrderPolicy();
-        var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository, _policy);
+        var history = new List<Client>();
+        history.Add(new Client("Manoel", ClientType.Comum));
+        history.Add(new Client("Andryelle", ClientType.Comum));
+        history.Add(new Client("Madry", ClientType.Comum));
 
-        service.Add("Manoel", ClientType.Comum);
-        service.Add("Andryelle", ClientType.Prioridade);
-        service.Add("Madry", ClientType.Comum);
-        service.Add("Manoelle", ClientType.Prioridade);
         // Act
-        service.CallNext();
-        service.CallNext();
-        service.CallNext();
-
-        var resultado = _policy.CallOrderType(service.GetHistory(), true);
-
-        // Assert
-        Assert.Equal(ClientType.Comum, resultado);
-    }
-
-    [Fact]
-    public void Policy_Should_Return_Priority_When_Last_Three_Are_All_Normal()
-    {
-        // Arrange
-        var _policy = new CallOrderPolicy();
-        var _repository = new InMemoryQueueRepository();
-        var service = new QueueService(_repository, _policy);
-
-        service.Add("Manoel", ClientType.Comum);
-        service.Add("Andryelle", ClientType.Comum);
-        service.Add("Madry", ClientType.Comum);
-        service.Add("Manoelle", ClientType.Prioridade);
-        // Act
-        service.CallNext();
-        service.CallNext();
-        service.CallNext();
-
-        var resultado = _policy.CallOrderType(service.GetHistory(), service.HasPrioty());
+        var resultado = _policy.CallOrderType(history, true);
 
         // Assert
         Assert.Equal(ClientType.Prioridade, resultado);
     }
+
+    [Fact]
+    public void CallOrderType_WithLast3AllCommon_AndNoPriority_ReturnsCommon()
+    {
+        // Arrange
+        var history = new List<Client>();
+        history.Add(new Client("Manoel", ClientType.Comum));
+        history.Add(new Client("Andryelle", ClientType.Comum));
+        history.Add(new Client("Madry", ClientType.Comum));
+
+        // Act
+        var resultado = _policy.CallOrderType(history, false);
+
+        // Assert
+        Assert.Equal(ClientType.Comum, resultado);
+    }
+
+    [Fact]
+    public void
+    CallOrderType_WithFewerThan3InHistory_AndPriorityExists_ReturnsCommon()
+    {
+        // Arrange
+        var history = new List<Client>();
+        history.Add(new Client("Manoel", ClientType.Comum));
+        history.Add(new Client("Andryelle", ClientType.Prioridade));
+
+        // Act
+        var resultado = _policy.CallOrderType(history, true);
+
+        // Assert
+        Assert.Equal(ClientType.Comum, resultado);
+    }
+
+    [Fact]
+    public void
+    CallOrderType_WithLast3NotAllCommon_AndPriorityExists_ReturnsCommon()
+    {
+        // Arrange
+        var history = new List<Client>();
+        history.Add(new Client("Manoel", ClientType.Comum));
+        history.Add(new Client("Manoelle", ClientType.Comum));
+        history.Add(new Client("Andryelle", ClientType.Prioridade));
+
+        // Act
+        var resultado = _policy.CallOrderType(history, true);
+
+        // Assert
+        Assert.Equal(ClientType.Comum, resultado);
+    }
+
+    [Fact]
+    public void
+    CallOrderType_WithEmptyHistory_AndPriorityExists_ReturnsCommon()
+    {
+        // Arrange
+        var history = new List<Client>() ?? Enumerable.Empty<Client>();
+
+        // Act
+        var resultado = _policy.CallOrderType(history, true);
+
+        // Assert
+        Assert.Equal(ClientType.Comum, resultado);
+    }
+
 }
