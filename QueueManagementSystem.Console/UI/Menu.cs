@@ -214,7 +214,7 @@ public class Menu
             ShowInfo("\nHistórico de atendimentos:");
             foreach (var client in history)
             {
-                System.Console.WriteLine($"- {client.Name} ({client.ClientType}) | Hora de Chegada: {client.EnQueueTime:HH:mm:ss}");
+                System.Console.WriteLine($"- {client.Name} ({client.ClientType}) | Hora de Chegada: {client.EnQueueTime:HH:mm:ss} | Horario de Atendimento: {client.CallTime:HH:mm:ss}");
             }
         }
 
