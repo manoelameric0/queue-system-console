@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using QueueManagementSystem.Console.Enums;
 
 namespace QueueManagementSystem.Console.Models;
@@ -8,7 +9,8 @@ public class Client
     public string Name {get;}
     public Guid ID {get;}
     public ClientType ClientType {get;}
-    public DateTime EnQueueTime;
+    public DateTime EnQueueTime {get;}
+    public DateTime? CallTime {get; private set;} 
 
     public Client(string name,ClientType clientType)
     {
@@ -36,5 +38,10 @@ public class Client
         ID = Guid.NewGuid();
         ClientType = clientType;
         EnQueueTime = DateTime.Now;
+    }
+
+    public void AddCallTime()
+    {
+        CallTime = DateTime.Now;
     }
 }

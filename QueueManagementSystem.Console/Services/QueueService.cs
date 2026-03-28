@@ -45,7 +45,8 @@ public class QueueService : IQueueService
             {
                 var client = clients.First(c => c.ClientType == ClientType.Prioridade);
 
-                _history.Add(client);
+                client.AddCallTime();
+                AddAtHistory(client);
                 _repository.Remove(client);
 
                 if (_history.Count() > 20) _history.RemoveAt(0);
@@ -54,7 +55,8 @@ public class QueueService : IQueueService
             {
                 var client = clients.First();
 
-                _history.Add(client);
+                client.AddCallTime();
+                AddAtHistory(client);
                 _repository.Remove(client);
                 if (_history.Count() > 20) _history.RemoveAt(0);
             }
@@ -73,7 +75,7 @@ public class QueueService : IQueueService
             client = GetHistory().Last();
 
             _repository.Add(client);
-            _history.Remove(client);
+            AddAtHistory(client);
 
         }
         return client;
@@ -88,6 +90,15 @@ public class QueueService : IQueueService
 
     public IEnumerable<Client> GetHistory() => _history ?? Enumerable.Empty<Client>();
 
+    public void AddAtHistory(Client client)
+    {
+        if (client.CallTime == null)
+        {
+            throw new ArgumentException("Falha no Atendimento");
+        }
+        _history.Add(client);
+    }
+
     public bool HasPrioty() => _repository.GetAll().Any(c => c.ClientType == ClientType.Prioridade);
     public bool HasClients() => _repository.GetAll().Any();
     public bool HasHistory() => _history.Any();
@@ -97,7 +108,7 @@ public class QueueService : IQueueService
         var type = _policy.CallOrderType(_history, HasPrioty());
 
         return type == ClientType.Prioridade ? clients.FirstOrDefault(c => c.ClientType == ClientType.Prioridade) : clients.FirstOrDefault();
-        
+
     }
-    
+
 }
