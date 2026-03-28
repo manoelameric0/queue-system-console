@@ -1,4 +1,5 @@
 using System;
+using System.Dynamic;
 using Microsoft.VisualBasic;
 using QueueManagementSystem.Console.Enums;
 using QueueManagementSystem.Console.Models;
@@ -9,7 +10,7 @@ namespace QueueManagementSystem.Console.Services;
 
 public class QueueService : IQueueService
 {
-    List<Client> _history = new();
+    private readonly List<Client> _history = new();
 
     private readonly IQueueRepository _repository;
     private readonly ICallOrderPolicy _policy;
@@ -75,7 +76,7 @@ public class QueueService : IQueueService
             client = GetHistory().Last();
 
             _repository.Add(client);
-            AddAtHistory(client);
+            _history.Remove(client);
 
         }
         return client;
