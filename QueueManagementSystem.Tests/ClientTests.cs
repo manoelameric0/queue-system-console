@@ -4,71 +4,60 @@ using QueueManagementSystem.Console.Enums;
 using QueueManagementSystem.Console.Repositories;
 using QueueManagementSystem.Console.Policies;
 using QueueManagementSystem.Console.Models;
+using Microsoft.VisualBasic;
 
 namespace QueueManagementSystem.Tests;
 
 public class ClientTests
 {
     [Fact]
-    public void Client_Should_Create_When_Name_Is_Valid()
+    public void Constructor_WithValidNameAndType_CreatesClientSuccessfully()
     {
         // Arrange
-        var _repository = new InMemoryQueueRepository();
-        var _policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, _policy);
 
         // Act
-        service.Add("Manoel", ClientType.Comum);
+        var client = new Client("Manoel", ClientType.Comum);
 
         // Assert
-        Assert.Equal("Manoel", service.GetClients().First().Name);
+        Assert.Equal("Manoel", client.Name);
+        Assert.Equal(ClientType.Comum, client.ClientType);
+        Assert.NotEqual(Guid.Empty, client.ID);
     }
 
     [Fact]
-    public void Client_Should_Exception_When_Name_Is_Empty()
+    public void Constructor_WithEmptyName_ThrowsArgumentException()
     {
         // Arrange
-        var _repository = new InMemoryQueueRepository();
-        var _policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, _policy);
 
-        ;
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => service.Add(string.Empty, ClientType.Prioridade));
+        var exception = Assert.Throws<ArgumentException>(() => new Client("", ClientType.Comum));
 
         // Assert
         Assert.Equal("Nome inválido", exception.Message);
     }
 
     [Fact]
-    public void Client_Should_Exception_When_Name_Is_White_Space()
+    public void Constructor_WithNameShorterThan3Chars_ThrowsArgumentException()
     {
         // Arrange
-        var _repository = new InMemoryQueueRepository();
-        var _policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, _policy);
-
-        ;
-        // Act
-        var exception = Assert.Throws<ArgumentException>(() => service.Add(" ", ClientType.Prioridade));
-
-        // Assert
-        Assert.Equal("Nome inválido", exception.Message);
-    }
-
-    [Fact]
-    public void Client_Should_Exception_When_Name_Is_Shorter_Than_Three_Characters()
-    {
-        // Arrange
-        var _repository = new InMemoryQueueRepository();
-        var _policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, _policy);
 
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => service.Add("Ma", ClientType.Comum));
+        var exception = Assert.Throws<ArgumentException>(() => new Client("ma", ClientType.Comum));
 
         // Assert
         Assert.Equal("Nome inválido: mínimo 3 caracteres e sem números.", exception.Message);
+    }
+
+    [Fact]
+    public void Constructor_WithNameContainingDigits_ThrowsArgumentException()
+    {
+        // Arrange
+
+        // Act
+        var exception = Assert.Throws<ArgumentException>(() => new Client("Manoel123", ClientType.Comum));
+
+        // Assert
+        Assert.Equal("O nome não pode conter números.", exception.Message);
     }
 
     [Fact]
