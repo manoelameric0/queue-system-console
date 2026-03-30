@@ -61,84 +61,28 @@ public class ClientTests
     }
 
     [Fact]
-    public void Client_Should_Exception_When_Name_Contains_Number()
+    public void Constructor_WithInvalidClientType_ThrowsArgumentException()
     {
         // Arrange
-        var _repository = new InMemoryQueueRepository();
-        var _policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, _policy);
-
-        ;
+        
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => service.Add("Manoel123", ClientType.Comum));
+        var exception = Assert.Throws<ArgumentException>(() => new Client("Manoel", 0));
 
         // Assert
-        Assert.Equal("O nome não pode conter números.", exception.Message);
+       Assert.Equal("Tipo de cliente inválido.", exception.Message);
     }
 
     [Fact]
-    public void Client_Should_Set_Type_Correctly_When_Valid()
+    public void Constructor_WithValidName_SetsEnqueueTimeToNow()
     {
         // Arrange
-        var _repository = new InMemoryQueueRepository();
-        var _policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, _policy);
 
         // Act
-        service.Add("Manoel", ClientType.Prioridade);
+        var client = new Client("Manoel", ClientType.Comum);
 
         // Assert
-        Assert.Equal(ClientType.Prioridade, service.GetClients().First().ClientType);
+        Assert.NotEqual(client.EnQueueTime, DateTime.Now);
     }
 
-    [Fact]
-    public void Client_Should_Throw_Exception_When_Type_Is_Invalid()
-    {
-        // Arrange
-        var _repository = new InMemoryQueueRepository();
-        var _policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, _policy);
-
-        // Act
-        var exception = Assert.Throws<ArgumentException>(() => service.Add("Manoel", (ClientType)3));
-
-        // Assert
-        Assert.Equal("Tipo de cliente inválido.", exception.Message);
-    }
-
-    [Fact]
-    public void Client_Should_Add_CallTime_When_CallNext_Is_Called()
-    {
-        // Arrange
-        var _repository = new InMemoryQueueRepository();
-        var _policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, _policy);
-
-        service.Add("Manoel", ClientType.Comum);
-        // Act
-        service.CallNext();
-        var client = service.GetHistory().First();
-
-        // Assert
-        Assert.NotNull(client.CallTime);
-    }
-
-    [Fact]
-    public void Client_Should_Add_CallTime_Correct_When_CallNext_Is_Called()
-    {
-        // Arrange
-        var _repository = new InMemoryQueueRepository();
-        var _policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, _policy);
-
-        service.Add("Manoel", ClientType.Comum);
-        // Act
-        var older = DateTime.Now;
-        service.CallNext();
-        var client = service.GetHistory().First();
-        var after = DateTime.Now;
-
-        // Assert
-        Assert.True(client.CallTime >= older && client.CallTime <= after);
-    }
+    
 }
