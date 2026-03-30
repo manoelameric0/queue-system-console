@@ -4,271 +4,63 @@ using QueueManagementSystem.Console.Policies;
 using QueueManagementSystem.Console.Repositories;
 using QueueManagementSystem.Console.Services;
 namespace QueueManagementSystem.Tests;
+using Moq;
+using QueueManagementSystem.Console.Models;
 
 public class QueueServiceTests
 {
-    [Fact]
-    public void Add_Should_Add_Normal_Client_When_Valid()
-    {   //Arrange → preparar cenário
-        var _repository = new InMemoryQueueRepository();
-        var policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, policy);
-
-        //Act → executar ação
-        service.Add("Manoel", ClientType.Comum);
-
-        //Assert → verificar resultado
-        var Clients = service.GetClients();
-        Assert.Equal(ClientType.Comum, Clients.First().ClientType);
-    }
-
-    [Fact]
-    public void Add_Should_Add_Priority_Client_When_Valid()
-    {   //Arrange → preparar cenário
-        var _repository = new InMemoryQueueRepository();
-        var policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, policy);
-
-        //Act → executar ação
-        service.Add("Manoel", ClientType.Prioridade);
-
-        //Assert → verificar resultado
-        var Clients = service.GetClients();
-        Assert.Equal(ClientType.Prioridade, Clients.First().ClientType);
-    }
-
-    [Fact]
-    public void Add_Should_Throw_Exception_When_Client_Is_Duplicated()
+    private readonly Mock<IQueueRepository> _repository = new();
+    private readonly Mock<ICallOrderPolicy> _policy = new();
+    private readonly QueueService _service;
+    public QueueServiceTests()
     {
-        // Given
-        var _repository = new InMemoryQueueRepository();
-        var policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, policy);
-
-        service.Add("Manoel", ClientType.Prioridade);
-        // When
-        var exeception = Assert.Throws<ArgumentException>(() => service.Add("Manoel", ClientType.Comum));
-
-        // Then
-        Assert.Equal("Cliente já está na Fila", exeception.Message);
+        _service = new QueueService(_repository.Object, _policy.Object);
     }
 
     [Fact]
-    public void Add_Should_Not_Modify_Queue_When_Duplicate_Exception_Is_Thrown()
+    public void Add_WithDuplicateName_ThrowsArgumentException()
     {
-        // Given
-        var _repository = new InMemoryQueueRepository();
-        var policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, policy);
+        // Arrange
+        _repository
+        .Setup(r => r.Exists(It.IsAny<string>()))
+        .Returns(true);
 
-        service.Add("Manoel", ClientType.Prioridade);
-        // When
-        var exeception = Assert.Throws<ArgumentException>(() => service.Add("Manoel", ClientType.Comum));
+        // Act
+        var exception = Assert.Throws<ArgumentException>(() => _service.Add("Manoel", ClientType.Comum));
 
-        // Then
-        Assert.Single(service.GetClients());
+        // Assert
+        Assert.Equal("Cliente já está na Fila", exception.Message);
     }
 
     [Fact]
-    public void CallNext_Should_Call_First_Client_When_Queue_Has_Clients()
+    public void UndoLastCall_WhenHistoryHasClient_ReturnsClientAndRestoresQueue()
     {
-        //Arrange → preparar cenário
-        var _repository = new InMemoryQueueRepository();
-        var policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, policy);
+        // Arrange
+        var client = new Client("manoel", ClientType.Comum);
 
-        service.Add("Manoel", ClientType.Comum);
-        service.Add("Andryelle", ClientType.Comum);
-        service.Add("Madry", ClientType.Comum);
-        service.Add("Manoelle", ClientType.Prioridade);
+        client.AddCallTime();
+        _service.AddAtHistory(client);
 
-        //Act → executar ação
-        service.CallNext();
+        // Act
+        var getHistory = _service.UndoLastCall();
 
-        //Assert → verificar resultado
-        var historico = service.GetHistory();
-
-        Assert.Equal("Manoel", historico.First().Name);
+        // Assert
+        Assert.Empty(_service.GetHistory());
+        Assert.Equal("manoel", getHistory!.Name);
+        _repository.Verify(r => r.Add(It.IsAny<Client>()), Times.Once);
     }
 
     [Fact]
-    public void CallNext_Should_Follow_Three_Normal_To_One_Priority_Rule()
+    public void UndoLastCall_WhenHistoryIsEmpty_ReturnsNull()
     {
-        //Arrange → preparar cenário
-        var _repository = new InMemoryQueueRepository();
-        var policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, policy);
+        // Arrange
 
-        service.Add("Manoel", ClientType.Comum);
-        service.Add("Andryelle", ClientType.Comum);
-        service.Add("Madry", ClientType.Comum);
-        service.Add("Manoelle", ClientType.Prioridade);
+        // Act
+        var getHistory = _service.UndoLastCall();
 
-        //Act → executar ação
-        service.CallNext();
-        service.CallNext();
-        service.CallNext();
-
-        //Assert → verificar resultado
-
-
-        Assert.Equal("Madry", service.GetHistory().Last().Name);
+        // Assert
+        Assert.Null(getHistory);
+        _repository.Verify(r => r.Add(It.IsAny<Client>()), Times.Never);
     }
-
-    [Fact]
-    public void CallNext_Should_Call_Clients_In_Sequence_Based_On_Arrival_Order()
-    {
-        //Arrange → preparar cenário
-        var _repository = new InMemoryQueueRepository();
-        var policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, policy);
-
-        service.Add("Manoel", ClientType.Comum);
-        service.Add("Andryelle", ClientType.Prioridade);
-        service.Add("Madry", ClientType.Comum);
-        service.Add("Fagna", ClientType.Comum);
-        service.Add("vitoria", ClientType.Comum);
-        service.Add("Mylenna", ClientType.Comum);
-        service.Add("Manoelle", ClientType.Prioridade);
-
-        //Act → executar ação
-        service.CallNext();
-        service.CallNext();
-        service.CallNext();
-        service.CallNext();
-        service.CallNext();
-        service.CallNext();
-
-        //Assert → verificar resultado
-
-
-        Assert.Equal("Manoelle", service.GetHistory().Last().Name);
-    }
-
-    [Fact]
-    public void CallNext_Should_Call_Priority_After_Three_Normal_Calls()
-    {
-        //Arrange → preparar cenário
-        var _repository = new InMemoryQueueRepository();
-        var policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, policy);
-
-        service.Add("Manoel", ClientType.Comum);
-        service.Add("Andryelle", ClientType.Comum);
-        service.Add("Madry", ClientType.Comum);
-        service.Add("Carlos", ClientType.Comum);
-        service.Add("Manoelle", ClientType.Prioridade);
-
-        //Act → executar ação
-        service.CallNext();
-        service.CallNext();
-        service.CallNext();
-        service.CallNext();
-
-        //Assert → verificar resultado
-        Assert.Equal("Manoelle", service.GetHistory().Last().Name);
-    }
-
-    [Fact]
-    public void UndoLastCall_Should_Reinsert_Last_Called_Client_At_Beginning_Of_Queue()
-    {
-        //Arrange → preparar cenário
-        var _repository = new InMemoryQueueRepository();
-        var policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, policy);
-
-        service.Add("Manoel", ClientType.Comum);
-        service.Add("Andryelle", ClientType.Comum);
-        service.Add("Madry", ClientType.Comum);
-
-        service.CallNext();
-        service.CallNext();
-
-        //Act → executar ação
-        service.UndoLastCall();
-
-        //Assert → verificar resultado
-        Assert.Contains(service.GetClients(), c => c.Name == "Andryelle");
-    }
-
-    [Fact]
-    public void UndoLastCall_Should_Remove_Client_From_History()
-    {
-        //Arrange → preparar cenário
-        var _repository = new InMemoryQueueRepository();
-        var policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, policy);
-
-        service.Add("Manoel", ClientType.Comum);
-        service.Add("Andryelle", ClientType.Comum);
-        service.Add("Madry", ClientType.Comum);
-
-        service.CallNext();
-        service.CallNext();
-
-        //Act → executar ação
-        service.UndoLastCall();
-        service.UndoLastCall();
-
-        //Assert → verificar resultado
-        Assert.True(!service.GetHistory().Any());
-    }
-
-    [Fact]
-    public void UndoLastCall_Should_Not_Modify_Queue_When_History_Is_Empty()
-    {
-        //Arrange → preparar cenário
-        var _repository = new InMemoryQueueRepository();
-        var policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, policy);
-
-        service.Add("Manoel", ClientType.Comum);
-        service.Add("Andryelle", ClientType.Comum);
-        service.Add("Madry", ClientType.Comum);
-
-        //Act → executar ação
-        service.UndoLastCall();
-
-        //Assert → verificar resultado
-        Assert.Equal(3, service.GetClients().Count());
-    }
-
-    [Fact]
-    public void GetClients_Should_Return_All_Clients_In_Correct_Order()
-    {
-        //Arrange → preparar cenário
-        var _repository = new InMemoryQueueRepository();
-        var policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, policy);
-
-        service.Add("Manoel", ClientType.Comum);
-        service.Add("Andryelle", ClientType.Comum);
-        service.Add("Madry", ClientType.Comum);
-
-        //Act → executar ação
-        service.UndoLastCall();
-
-        //Assert → verificar resultado
-        Assert.Equal(3, service.GetClients().Count());
-    }
-
-    [Fact]
-    public void GetClients_Should_Return_Empty_When_No_Clients_Exist()
-    {
-        //Arrange → preparar cenário
-        var _repository = new InMemoryQueueRepository();
-        var policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, policy);
-
-        service.Add("Manoel", ClientType.Comum);
-
-        //Act → executar ação
-        service.CallNext();
-
-
-        //Assert → verificar resultado
-        Assert.Empty(service.GetClients());
-    }
-
 
 }

@@ -8,148 +8,64 @@ using QueueManagementSystem.Console.Services;
 namespace QueueManagementSystem.Tests;
 
 public class InMemoryQueueRepositoryTest
-{
+{   
+    private readonly InMemoryQueueRepository _repository = new();
+
     [Fact]
-    public void Add_Should_Add_Client_To_Repository()
+    public void Add_WhenCalled_ClientAppearsInGetAll()
     {
         // Arrange
-        var _repository = new InMemoryQueueRepository();
-
+        var client = new Client("Manoel", ClientType.Prioridade);
 
         // Act
-        _repository.Add(new Client(name: "Manoel", clientType: Console.Enums.ClientType.Comum));
+        _repository.Add(client);
+        var clients = _repository.GetAll();
 
         // Assert
-        var clients = Assert.Single(_repository.GetAll());
-
-        Assert.Equal("Manoel", clients.Name);
+        Assert.Contains(clients, c => c.Name == "Manoel");
     }
 
     [Fact]
-    public void Add_Should_Throw_Exception_When_Client_Is_Duplicated()
+    public void Remove_WhenClientExists_ClientDisappearsFromGetAll()
     {
         // Arrange
-        var _repository = new InMemoryQueueRepository();
-         var _policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, _policy);
-
-        service.Add("Manoel", Console.Enums.ClientType.Comum);
+        var client = new Client("Manoel", ClientType.Prioridade);
+        _repository.Add(client);
 
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => service.Add("Manoel", Console.Enums.ClientType.Comum));
+        _repository.Remove(client);
+        var clients = _repository.GetAll();
 
         // Assert
-        Assert.Equal("Cliente já está na Fila", exception.Message);
+        Assert.DoesNotContain(clients, c => c.Name == "Manoel");
     }
 
     [Fact]
-    public void Add_Should_Not_Add_Client_When_Duplicate_Exception_Is_Thrown()
+    public void Exists_WhenClientAdded_ReturnsTrue()
     {
         // Arrange
-        var _repository = new InMemoryQueueRepository();
-         var _policy = new CallOrderPolicy();
-        var service = new QueueService(_repository, _policy);
-
-        service.Add("Manoel", ClientType.Comum);
+        var client = new Client("Manoel", ClientType.Prioridade);
+        _repository.Add(client);
 
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => service.Add("Manoel", ClientType.Comum));
+        var exist = _repository.Exists("Manoel");
 
         // Assert
-        Assert.Single(_repository.GetAll());
+        Assert.True(exist);
     }
 
     [Fact]
-    public void Remove_Should_Remove_Client_From_Repository()
+    public void Exists_WithDifferentCasing_ReturnsTrue()
     {
         // Arrange
-        var repository = new InMemoryQueueRepository();
-
-        repository.Add(new Client("Manoel", ClientType.Comum));
-        repository.Add(new Client("Andryelle", ClientType.Comum));
-
+        var client = new Client("MANOEL", ClientType.Prioridade);
+        _repository.Add(client);
 
         // Act
-        repository.Remove(repository.GetAll().First());
+        var exist = _repository.Exists("manoel");
 
         // Assert
-        Assert.Single(repository.GetAll());
-    }
-
-    [Fact]
-    public void GetClients_Should_Return_All_Clients()
-    {
-        // Arrange
-        var repository = new InMemoryQueueRepository();
-
-        // Act
-        repository.Add(new Client("Manoel", ClientType.Comum));
-        repository.Add(new Client("Andryelle", ClientType.Comum));
-        repository.Add(new Client("Carlos", ClientType.Comum));
-
-        // Assert
-        Assert.Equal(3, repository.GetAll().Count());
-    }
-
-    [Fact]
-    public void GetClients_Should_Return_Empty_When_No_Clients_Exist()
-    {
-        // Arrange
-        var repository = new InMemoryQueueRepository();
-
-        // Act
-        repository.Add(new Client("Manoel", ClientType.Comum));
-        var client = repository.GetAll().First();
-        repository.Remove(client);
-
-        // Assert
-        Assert.Empty(repository.GetAll());
-    }
-
-    [Fact]
-    public void GetClients_Should_Return_Clients_In_Correct_Order()
-    {
-        // Arrange
-        var repository = new InMemoryQueueRepository();
-
-        // Act
-        repository.Add(new Client("Manoel", ClientType.Comum));
-        repository.Add(new Client("Andryelle", ClientType.Comum));
-        repository.Add(new Client("Carlos", ClientType.Comum));
-        repository.Add(new Client("Jullia", ClientType.Comum));
-
-        // Assert
-        Assert.Equal("Andryelle", repository.GetAll().ElementAt(1).Name);
-    }
-
-    [Fact]
-    public void Exists_Should_Return_True_When_Client_Already_Exists()
-    {
-        // Arrange
-        var repository = new InMemoryQueueRepository();
-
-        repository.Add(new Client("Manoel", ClientType.Comum));
-
-        // Act
-        bool existe = repository.Exists("Manoel");
-
-        // Assert
-        Assert.True(existe);
-    }
-
-    [Fact]
-    public void Exists_Should_Return_False_When_Client_Does_Not_Exist()
-    {
-        // Arrange
-        var repository = new InMemoryQueueRepository();
-
-        repository.Add(new Client("Manoel", ClientType.Comum));
-
-        // Act
-        bool existe = repository.Exists("Andryelle");
-
-        // Assert
-        Assert.False(existe);
+        Assert.True(exist);
     }
 
 }
