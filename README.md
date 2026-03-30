@@ -44,6 +44,7 @@ Diferente de uma abordagem com contador, o sistema utiliza o **histórico de ate
 *  Chamar próximo cliente
 *  Desfazer último atendimento (Undo)
 *  Visualizar fila e historico atual
+![Menu do Sistema](QueueManagementSystem.Console/assets/Menu.png)
 
 ---
 
