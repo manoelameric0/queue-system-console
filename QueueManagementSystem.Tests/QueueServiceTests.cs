@@ -33,6 +33,37 @@ public class QueueServiceTests
     }
 
     [Fact]
+    public void CallNext_WhenClientsExist_ReturnsNextInOrder()
+    {
+        // Arrange
+        _repository
+        .SetupSequence(r => r.GetAll())
+        .Returns(new List<Client>(){new Client("Manoel", ClientType.Comum)})
+        .Returns(new List<Client>(){new Client("Carlos", ClientType.Comum)})
+        .Returns(new List<Client>(){new Client("Jullia", ClientType.Comum)});
+
+        _repository
+        .Setup(r => r.Remove(It.IsAny<Client>()));
+
+        _policy
+        .Setup(p => p.CallOrderType(_service.GetHistory(), false))
+        .Returns(ClientType.Comum);
+
+        // Act
+        _service.CallNext();
+        _service.CallNext();
+        _service.CallNext();
+
+        var history = _service.GetHistory();
+
+        // Assert
+        Assert.NotEmpty(history);
+        Assert.Equal("Manoel", history.First()!.Name);
+        Assert.Equal("Jullia", history.Last()!.Name);
+        _repository.Verify(r => r.GetAll(), Times.Exactly(3));
+    }
+
+    [Fact]
     public void UndoLastCall_WhenHistoryHasClient_ReturnsClientAndRestoresQueue()
     {
         // Arrange
