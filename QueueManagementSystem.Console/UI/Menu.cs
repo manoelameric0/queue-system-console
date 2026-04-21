@@ -1,7 +1,6 @@
 using System;
 using QueueManagementSystem.Core.Enums;
-using QueueManagementSystem.Core.Services;
-using QueueManagementSystem.Core.Policies;
+using QueueManagementSystem.Core.Interfaces;
 
 namespace QueueManagementSystem.Console.UI;
 

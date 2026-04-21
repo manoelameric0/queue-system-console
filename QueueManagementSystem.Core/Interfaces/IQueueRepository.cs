@@ -1,7 +1,7 @@
 using System;
 using QueueManagementSystem.Core.Models;
 
-namespace QueueManagementSystem.Core.Repositories;
+namespace QueueManagementSystem.Core.Interfaces;
 
 
     

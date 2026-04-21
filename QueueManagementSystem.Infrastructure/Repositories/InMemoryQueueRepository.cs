@@ -1,7 +1,8 @@
 using System;
 using QueueManagementSystem.Core.Models;
+using QueueManagementSystem.Core.Interfaces;
 
-namespace QueueManagementSystem.Core.Repositories;
+namespace QueueManagementSystem.Infrastructure.Repositories;
 
 public class InMemoryQueueRepository:IQueueRepository
 {

@@ -2,7 +2,7 @@ using System;
 using QueueManagementSystem.Core.Enums;
 using QueueManagementSystem.Core.Models;
 
-namespace QueueManagementSystem.Core.Services;
+namespace QueueManagementSystem.Core.Interfaces;
 
 public interface IQueueService
 {

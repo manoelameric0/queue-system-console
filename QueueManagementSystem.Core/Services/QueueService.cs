@@ -3,8 +3,7 @@ using System.Dynamic;
 using Microsoft.VisualBasic;
 using QueueManagementSystem.Core.Enums;
 using QueueManagementSystem.Core.Models;
-using QueueManagementSystem.Core.Policies;
-using QueueManagementSystem.Core.Repositories;
+using QueueManagementSystem.Core.Interfaces;
 
 namespace QueueManagementSystem.Core.Services;
 
