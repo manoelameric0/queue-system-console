@@ -27,11 +27,12 @@ namespace QueueManagementSystem.API.Controllers
         [HttpPost("call-next")]
         public IActionResult CallNext()
         {
+            // caso a fila esteja vazia 204
             if (!_queueService.HasClients())
             {
                 return NoContent();
             }
-            
+
             _queueService.CallNext();
             return Ok();
 

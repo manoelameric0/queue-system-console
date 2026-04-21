@@ -81,6 +81,16 @@ public class QueueService : IQueueService
         return client;
     }
 
+    public QueueState GetQueueState()
+    {
+        var clients = GetClients();
+        var clientsComum = clients.Where(c => c.ClientType == ClientType.Comum);
+        var clientsPriority = clients.Where(c => c.ClientType == ClientType.Prioridade);
+        var history = GetHistory();
+
+        return new QueueState(comun: clientsComum, prioridade: clientsPriority, history: history);
+    }
+
     public IEnumerable<Client> GetClients()
     {
         var clients = _repository.GetAll().OrderBy(c => c.EnQueueTime).ToList();
