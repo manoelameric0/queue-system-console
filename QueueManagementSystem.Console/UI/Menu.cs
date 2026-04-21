@@ -177,39 +177,34 @@ public class Menu
         System.Console.WriteLine("========================================");
         System.Console.WriteLine("");
 
-        var clients = _service.GetClients();
-        var hasClients = clients.Any();
-        var clientsComum = clients.Where(c => c.ClientType == ClientType.Comum);
-        var clientsPriority = clients.Where(c => c.ClientType == ClientType.Prioridade);
-        var history = _service.GetHistory();
-        var hasHistory = history.Any();
+        var queueState = _service.GetQueueState();
 
-        if (!hasClients && !hasHistory) ShowInfo("Nenhum Cliente Atendido até o Momento");
+        if (!queueState.HasClients() && !queueState.History.Any()) ShowInfo("Nenhum Cliente Atendido até o Momento");
 
 
-        if (clientsComum.Any())
+        if (queueState.Comun.Any())
         {
             ShowInfo("\nFila Comum:");
-            foreach (var client in clientsComum)
+            foreach (var client in queueState.Comun)
             {
                 System.Console.WriteLine($"- {client.Name} | Horario de Chegada: {client.EnQueueTime:HH:mm:ss}");
             }
         }
 
-        if (clientsPriority.Any())
+        if (queueState.Prioridade.Any())
         {
             ShowInfo("\nFila Preferencial:");
-            foreach (var client in clientsPriority)
+            foreach (var client in queueState.Prioridade)
             {
                 System.Console.WriteLine($"- {client.Name} | Horario de Chegada: {client.EnQueueTime:HH:mm:ss}");
             }
         }
 
 
-        if (hasHistory)
+        if (queueState.History.Any())
         {
             ShowInfo("\nHistórico de atendimentos:");
-            foreach (var client in history)
+            foreach (var client in queueState.History)
             {
                 System.Console.WriteLine($"- {client.Name} ({client.ClientType}) | Hora de Chegada: {client.EnQueueTime:HH:mm:ss} | Horario de Atendimento: {client.CallTime:HH:mm:ss}");
             }

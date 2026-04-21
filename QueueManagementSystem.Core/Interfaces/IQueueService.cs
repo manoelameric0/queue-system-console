@@ -11,6 +11,7 @@ public interface IQueueService
     Client? UndoLastCall();
     IEnumerable<Client> GetClients();
     IEnumerable<Client> GetHistory();
+    QueueState GetQueueState();
     bool HasClients();
     bool HasHistory();
     Client? GetPreview();
