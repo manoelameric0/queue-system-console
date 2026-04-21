@@ -1,12 +1,12 @@
 using System;
 using System.Dynamic;
 using Microsoft.VisualBasic;
-using QueueManagementSystem.Console.Enums;
-using QueueManagementSystem.Console.Models;
-using QueueManagementSystem.Console.Policies;
-using QueueManagementSystem.Console.Repositories;
+using QueueManagementSystem.Core.Enums;
+using QueueManagementSystem.Core.Models;
+using QueueManagementSystem.Core.Policies;
+using QueueManagementSystem.Core.Repositories;
 
-namespace QueueManagementSystem.Console.Services;
+namespace QueueManagementSystem.Core.Services;
 
 public class QueueService : IQueueService
 {

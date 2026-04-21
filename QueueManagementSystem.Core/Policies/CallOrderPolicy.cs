@@ -1,8 +1,8 @@
 using System;
-using QueueManagementSystem.Console.Enums;
-using QueueManagementSystem.Console.Models;
+using QueueManagementSystem.Core.Enums;
+using QueueManagementSystem.Core.Models;
 
-namespace QueueManagementSystem.Console.Policies;
+namespace QueueManagementSystem.Core.Policies;
 
 public class CallOrderPolicy : ICallOrderPolicy
 {

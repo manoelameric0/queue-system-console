@@ -1,8 +1,8 @@
 using System;
 using System.Globalization;
-using QueueManagementSystem.Console.Enums;
+using QueueManagementSystem.Core.Enums;
 
-namespace QueueManagementSystem.Console.Models;
+namespace QueueManagementSystem.Core.Models;
 
 public class Client
 {

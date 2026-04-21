@@ -1,7 +1,8 @@
-﻿using QueueManagementSystem.Console.Policies;
-using QueueManagementSystem.Console.Repositories;
-using QueueManagementSystem.Console.Services;
+﻿using QueueManagementSystem.Core.Policies;
+using QueueManagementSystem.Core.Repositories;
+using QueueManagementSystem.Core.Services;
 using QueueManagementSystem.Console.UI;
+using QueueManagementSystem.Core;
 
 
 var _repository = new InMemoryQueueRepository();

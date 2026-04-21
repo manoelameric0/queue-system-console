@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\QueueManagementSystem.Console\QueueManagementSystem.Console.csproj" />
+    <ProjectReference Include="..\QueueManagementSystem.Core\QueueManagementSystem.Core.csproj" />
   </ItemGroup>
 
 </Project>

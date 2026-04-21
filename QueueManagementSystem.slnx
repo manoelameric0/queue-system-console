@@ -1,4 +1,6 @@
 <Solution>
+  <Project Path="QueueManagementSystem.API/QueueManagementSystem.API.csproj" />
   <Project Path="QueueManagementSystem.Console/QueueManagementSystem.Console.csproj" />
+  <Project Path="QueueManagementSystem.Core/QueueManagementSystem.Core.csproj" />
   <Project Path="QueueManagementSystem.Tests/QueueManagementSystem.Tests.csproj" />
 </Solution>

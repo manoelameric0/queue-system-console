@@ -1,8 +1,8 @@
 using System;
-using QueueManagementSystem.Console.Enums;
-using QueueManagementSystem.Console.Models;
+using QueueManagementSystem.Core.Enums;
+using QueueManagementSystem.Core.Models;
 
-namespace QueueManagementSystem.Console.Services;
+namespace QueueManagementSystem.Core.Services;
 
 public interface IQueueService
 {

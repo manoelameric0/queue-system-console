@@ -1,4 +1,4 @@
-namespace QueueManagementSystem.Console.Enums;
+namespace QueueManagementSystem.Core.Enums;
 
 public enum ClientType
 {

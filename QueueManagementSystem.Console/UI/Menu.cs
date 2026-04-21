@@ -1,9 +1,7 @@
 using System;
-using Microsoft.VisualBasic;
-using QueueManagementSystem.Console.Enums;
-using QueueManagementSystem.Console.Models;
-using QueueManagementSystem.Console.Policies;
-using QueueManagementSystem.Console.Services;
+using QueueManagementSystem.Core.Enums;
+using QueueManagementSystem.Core.Services;
+using QueueManagementSystem.Core.Policies;
 
 namespace QueueManagementSystem.Console.UI;
 
