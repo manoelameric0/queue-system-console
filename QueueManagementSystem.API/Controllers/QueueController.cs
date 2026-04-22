@@ -39,6 +39,26 @@ namespace QueueManagementSystem.API.Controllers
             
         }
 
+        [HttpGet("get-queue-state")]
+        public IActionResult GetQueueState()
+        {
+            var queueState = _queueService.GetQueueState();
+
+            if (!queueState.HasClients())
+            {
+                return NoContent();
+            }
+
+            var response = new QueueStateResponse
+            {
+                Comun = queueState.Comun.Select(ClientMapper.MapClient),
+                Prioridade = queueState.Prioridade.Select(ClientMapper.MapClient),
+                History = queueState.History.Select(ClientMapper.MapClient)
+            };
+
+            return Ok(response);
+        }
+
     }
 
 }
