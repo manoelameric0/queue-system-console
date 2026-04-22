@@ -18,7 +18,7 @@ public class QueueState
 
     public bool HasClients()
     {
-        if (Comun.Any() && Prioridade.Any()) return true;
+        if (Comun.Any() || Prioridade.Any() || History.Any()) return true;
 
         return false;
     }
