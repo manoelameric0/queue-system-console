@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QueueManagementSystem.API.DTOs;
 using QueueManagementSystem.Core.Interfaces;
-// eu estive aqui teste
+
 namespace QueueManagementSystem.API.Controllers
 {
     [Route("api/[controller]")]
@@ -57,6 +57,16 @@ namespace QueueManagementSystem.API.Controllers
             };
 
             return Ok(response);
+        }
+
+        [HttpPost("undo")]
+        public IActionResult UndoLastCall()
+        {
+            var client = _queueService.UndoLastCall();
+
+            if (client == null)  return NoContent(); 
+
+            return Ok(client);
         }
 
     }
