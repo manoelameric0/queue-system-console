@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using QueueManagementSystem.API.DTOs;
 using QueueManagementSystem.Core.Interfaces;
@@ -21,7 +22,7 @@ namespace QueueManagementSystem.API.Controllers
         {
             _queueService.Add(request.Name, request.Type);
 
-            return Ok("Client adicionado com sucesso");
+            return Created("",request);
         }
 
         [HttpPost("call-next")]
