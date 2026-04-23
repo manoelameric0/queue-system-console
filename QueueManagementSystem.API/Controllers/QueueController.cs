@@ -69,7 +69,7 @@ namespace QueueManagementSystem.API.Controllers
             var response = new ClientResponse
             {
                 Name = client.Name,
-                ClientType = client.ClientType,
+                ClientType = client.ClientType.ToString(),
                 EnQueueTime = client.EnQueueTime,
                 CallTime = client.CallTime,
             };
