@@ -1,4 +1,5 @@
 using Microsoft.Extensions.FileSystemGlobbing;
+using QueueManagementSystem.API.Middleware;
 using QueueManagementSystem.Core.Interfaces;
 using QueueManagementSystem.Core.Policies;
 using QueueManagementSystem.Core.Services;
@@ -35,6 +36,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
 
