@@ -51,8 +51,8 @@ namespace QueueManagementSystem.API.Controllers
 
             var response = new QueueStateResponse
             {
-                Comun = queueState.Comun.Select(ClientMapper.MapClient),
-                Prioridade = queueState.Prioridade.Select(ClientMapper.MapClient),
+                NormalQueue = queueState.Comun.Select(ClientMapper.MapClient),
+                PreferentialQueue = queueState.Prioridade.Select(ClientMapper.MapClient),
                 History = queueState.History.Select(ClientMapper.MapClient)
             };
 
@@ -69,9 +69,9 @@ namespace QueueManagementSystem.API.Controllers
             var response = new ClientResponse
             {
                 Name = client.Name,
-                ClientType = client.ClientType.ToString(),
-                EnQueueTime = client.EnQueueTime,
-                CallTime = client.CallTime,
+                Type = client.Type.ToString(),
+                QueuedAt = client.QueuedAt,
+                CalledAt = client.CalledAt,
             };
 
             return Ok(response);

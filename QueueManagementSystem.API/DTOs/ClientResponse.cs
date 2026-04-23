@@ -6,9 +6,9 @@ namespace QueueManagementSystem.API.DTOs;
 public class ClientResponse
 {
     public string Name {get; set;}
-    public string ClientType {get;set;}
-    public DateTime EnQueueTime {get; set;}
-    public DateTime? CallTime {get; set;} 
+    public string Type {get;set;}
+    public DateTime QueuedAt {get; set;}
+    public DateTime? CalledAt {get; set;} 
 
     public ClientResponse()
     {

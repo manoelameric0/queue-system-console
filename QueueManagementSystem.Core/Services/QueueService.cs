@@ -39,11 +39,11 @@ public class QueueService : IQueueService
 
         if (clients.Any())
         {
-            var clientType = _policy.CallOrderType(_history, clients.Any(c => c.ClientType == ClientType.Prioridade));
+            var clientType = _policy.CallOrderType(_history, clients.Any(c => c.Type == ClientType.Preferential));
 
-            if (clientType == ClientType.Prioridade)
+            if (clientType == ClientType.Preferential)
             {
-                var client = clients.First(c => c.ClientType == ClientType.Prioridade);
+                var client = clients.First(c => c.Type == ClientType.Preferential);
 
                 client.AddCallTime();
                 AddAtHistory(client);
@@ -84,8 +84,8 @@ public class QueueService : IQueueService
     public QueueState GetQueueState()
     {
         var clients = GetClients();
-        var clientsComum = clients.Where(c => c.ClientType == ClientType.Comum);
-        var clientsPriority = clients.Where(c => c.ClientType == ClientType.Prioridade);
+        var clientsComum = clients.Where(c => c.Type == ClientType.Normal);
+        var clientsPriority = clients.Where(c => c.Type == ClientType.Preferential);
         var history = GetHistory();
 
         return new QueueState(comun: clientsComum, prioridade: clientsPriority, history: history);
@@ -93,7 +93,7 @@ public class QueueService : IQueueService
 
     public IEnumerable<Client> GetClients()
     {
-        var clients = _repository.GetAll().OrderBy(c => c.EnQueueTime).ToList();
+        var clients = _repository.GetAll().OrderBy(c => c.QueuedAt).ToList();
 
         return clients ?? Enumerable.Empty<Client>();
     }
@@ -102,7 +102,7 @@ public class QueueService : IQueueService
 
     public void AddAtHistory(Client client)
     {
-        if (client.CallTime == null)
+        if (client.CalledAt == null)
         {
             throw new ArgumentException("Falha no Atendimento");
         }
@@ -114,9 +114,9 @@ public class QueueService : IQueueService
     public Client? GetPreview()
     {
         var clients = GetClients();
-        var type = _policy.CallOrderType(_history, clients.Any(c => c.ClientType == ClientType.Prioridade));
+        var type = _policy.CallOrderType(_history, clients.Any(c => c.Type == ClientType.Preferential));
 
-        return type == ClientType.Prioridade ? clients.FirstOrDefault(c => c.ClientType == ClientType.Prioridade) : clients.FirstOrDefault();
+        return type == ClientType.Preferential ? clients.FirstOrDefault(c => c.Type == ClientType.Preferential) : clients.FirstOrDefault();
 
     }
 

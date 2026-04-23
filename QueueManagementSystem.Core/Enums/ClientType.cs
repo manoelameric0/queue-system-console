@@ -2,5 +2,5 @@ namespace QueueManagementSystem.Core.Enums;
 
 public enum ClientType
 {
-    Prioridade = 2, Comum = 1
+    Preferential = 2, Normal = 1
 }

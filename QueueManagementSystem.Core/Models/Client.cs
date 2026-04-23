@@ -8,9 +8,9 @@ public class Client
 {
     public string Name {get;}
     public Guid ID {get;}
-    public ClientType ClientType {get;}
-    public DateTime EnQueueTime {get;}
-    public DateTime? CallTime {get; private set;} 
+    public ClientType Type {get;}
+    public DateTime QueuedAt {get;}
+    public DateTime? CalledAt {get; private set;} 
 
     public Client(string name,ClientType clientType)
     {
@@ -36,12 +36,12 @@ public class Client
 
         Name = name;
         ID = Guid.NewGuid();
-        ClientType = clientType;
-        EnQueueTime = DateTime.Now;
+        Type = clientType;
+        QueuedAt = DateTime.Now;
     }
 
     public void AddCallTime()
     {
-        CallTime = DateTime.Now;
+        CalledAt = DateTime.Now;
     }
 }

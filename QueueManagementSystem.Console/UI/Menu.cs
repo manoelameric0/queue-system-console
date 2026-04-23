@@ -29,7 +29,7 @@ public class Menu
             System.Console.WriteLine("");
 
             var client = _service.GetPreview();
-            System.Console.WriteLine(client != null ? $"[ Client atual: {client.Name} ({client.ClientType}) | Hora de chegada: {client.EnQueueTime:HH:mm:ss} ]" : "[ Nenhum cliente em atendimento ]");
+            System.Console.WriteLine(client != null ? $"[ Client atual: {client.Name} ({client.Type}) | Hora de chegada: {client.QueuedAt:HH:mm:ss} ]" : "[ Nenhum cliente em atendimento ]");
 
             System.Console.WriteLine("");
             System.Console.WriteLine("----------------------------------------");
@@ -187,7 +187,7 @@ public class Menu
             ShowInfo("\nFila Comum:");
             foreach (var client in queueState.Comun)
             {
-                System.Console.WriteLine($"- {client.Name} | Horario de Chegada: {client.EnQueueTime:HH:mm:ss}");
+                System.Console.WriteLine($"- {client.Name} | Horario de Chegada: {client.QueuedAt:HH:mm:ss}");
             }
         }
 
@@ -196,7 +196,7 @@ public class Menu
             ShowInfo("\nFila Preferencial:");
             foreach (var client in queueState.Prioridade)
             {
-                System.Console.WriteLine($"- {client.Name} | Horario de Chegada: {client.EnQueueTime:HH:mm:ss}");
+                System.Console.WriteLine($"- {client.Name} | Horario de Chegada: {client.QueuedAt:HH:mm:ss}");
             }
         }
 
@@ -206,7 +206,7 @@ public class Menu
             ShowInfo("\nHistórico de atendimentos:");
             foreach (var client in queueState.History)
             {
-                System.Console.WriteLine($"- {client.Name} ({client.ClientType}) | Hora de Chegada: {client.EnQueueTime:HH:mm:ss} | Horario de Atendimento: {client.CallTime:HH:mm:ss}");
+                System.Console.WriteLine($"- {client.Name} ({client.Type}) | Hora de Chegada: {client.QueuedAt:HH:mm:ss} | Horario de Atendimento: {client.CalledAt:HH:mm:ss}");
             }
         }
 

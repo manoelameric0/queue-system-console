@@ -10,9 +10,9 @@ public class ClientMapper
         return new ClientResponse
         {
             Name = c.Name,
-            ClientType = c.ClientType.ToString(),
-            EnQueueTime = c.EnQueueTime,
-            CallTime = c.CallTime
+            Type = c.Type.ToString(),
+            QueuedAt = c.QueuedAt,
+            CalledAt = c.CalledAt
 
         };
             
