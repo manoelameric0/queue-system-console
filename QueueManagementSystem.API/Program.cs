@@ -15,7 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // service
-builder.Services.AddScoped<IQueueService, QueueService>();
+builder.Services.AddSingleton<IQueueService, QueueService>();
 
 //Repository
 builder.Services.AddSingleton<IQueueRepository, InMemoryQueueRepository>();
