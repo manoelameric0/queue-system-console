@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QueueManagementSystem.API.DTOs;
 using QueueManagementSystem.Core.Interfaces;
-
+// eu estive aqui teste
 namespace QueueManagementSystem.API.Controllers
 {
     [Route("api/[controller]")]
