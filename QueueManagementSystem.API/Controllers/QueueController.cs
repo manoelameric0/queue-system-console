@@ -64,9 +64,17 @@ namespace QueueManagementSystem.API.Controllers
         {
             var client = _queueService.UndoLastCall();
 
-            if (client == null)  return NoContent(); 
+            if (client == null)  return NoContent();
 
-            return Ok(client);
+            var response = new ClientResponse
+            {
+                Name = client.Name,
+                ClientType = client.ClientType,
+                EnQueueTime = client.EnQueueTime,
+                CallTime = client.CallTime,
+            };
+
+            return Ok(response);
         }
 
     }
