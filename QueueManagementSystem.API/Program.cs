@@ -1,8 +1,10 @@
 using Microsoft.Extensions.FileSystemGlobbing;
+using Microsoft.EntityFrameworkCore;
 using QueueManagementSystem.API.Middleware;
 using QueueManagementSystem.Core.Interfaces;
 using QueueManagementSystem.Core.Policies;
 using QueueManagementSystem.Core.Services;
+using QueueManagementSystem.Infrastructure.Data;
 using QueueManagementSystem.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +22,7 @@ builder.Services.AddSingleton<IQueueService, QueueService>();
 
 //Repository
 builder.Services.AddSingleton<IQueueRepository, InMemoryQueueRepository>();
+builder.Services.AddDbContext<QueueDbContext>(option => option.UseSqlite("Data Source=queue.db"));
 
 //Policy
 builder.Services.AddSingleton<ICallOrderPolicy, CallOrderPolicy>();
