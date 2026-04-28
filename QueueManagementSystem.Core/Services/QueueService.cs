@@ -20,50 +20,50 @@ public class QueueService : IQueueService
     }
 
 
-    public void Add(string name, ClientType type)
+    public async Task Add(string name, ClientType type)
     {
-        if (_repository.Exists(name))
-        {
-            throw new ArgumentException("Cliente já está na Fila");
-        }
+        //if (_repository.Exists(name))
+        //{
+        //    throw new ArgumentException("Cliente já está na Fila");
+        //}
 
         //adiciona todos os clientes no repository
-        _repository.Add(new Client
+        await _repository.Add(new Client
         (Name: name, Type: type));
 
     }
 
-    public void CallNext()
-    {
-        var clients = GetClients();
+    //public void CallNext()
+    //{
+    //    var clients = GetClients();
 
-        if (clients.Any())
-        {
-            var clientType = _policy.CallOrderType(_history, clients.Any(c => c.Type == ClientType.Preferential));
+    //    if (clients.Any())
+    //    {
+    //        var clientType = _policy.CallOrderType(_history, clients.Any(c => c.Type == ClientType.Preferential));
 
-            if (clientType == ClientType.Preferential)
-            {
-                var client = clients.First(c => c.Type == ClientType.Preferential);
+    //        if (clientType == ClientType.Preferential)
+    //        {
+    //            var client = clients.First(c => c.Type == ClientType.Preferential);
 
-                client.AddCallTime();
-                AddAtHistory(client);
-                _repository.Remove(client);
+    //            client.AddCallTime();
+    //            AddAtHistory(client);
+    //            _repository.Remove(client);
 
-                if (_history.Count() > 20) _history.RemoveAt(0);
-            }
-            else
-            {
-                var client = clients.First();
+    //            if (_history.Count() > 20) _history.RemoveAt(0);
+    //        }
+    //        else
+    //        {
+    //            var client = clients.First();
 
-                client.AddCallTime();
-                AddAtHistory(client);
-                _repository.Remove(client);
-                if (_history.Count() > 20) _history.RemoveAt(0);
-            }
+    //            client.AddCallTime();
+    //            AddAtHistory(client);
+    //            _repository.Remove(client);
+    //            if (_history.Count() > 20) _history.RemoveAt(0);
+    //        }
 
-        }
+    //    }
 
-    }
+    //}
 
     public Client? UndoLastCall()
     {
@@ -81,22 +81,22 @@ public class QueueService : IQueueService
         return client;
     }
 
-    public QueueState GetQueueState()
-    {
-        var clients = GetClients();
-        var clientsComum = clients.Where(c => c.Type == ClientType.Normal);
-        var clientsPriority = clients.Where(c => c.Type == ClientType.Preferential);
-        var history = GetHistory();
+    //public QueueState GetQueueState()
+    //{
+    //    var clients = GetClients();
+    //    var clientsComum = clients.Where(c => c.Type == ClientType.Normal);
+    //    var clientsPriority = clients.Where(c => c.Type == ClientType.Preferential);
+    //    var history = GetHistory();
 
-        return new QueueState(comun: clientsComum, prioridade: clientsPriority, history: history);
-    }
+    //    return new QueueState(comun: clientsComum, prioridade: clientsPriority, history: history);
+    //}
 
-    public IEnumerable<Client> GetClients()
-    {
-        var clients = _repository.GetAll().OrderBy(c => c.QueuedAt).ToList();
+    //public IEnumerable<Client> GetClients()
+    //{
+    //    var clients = _repository.GetAll().OrderBy(c => c.QueuedAt).ToList();
 
-        return clients ?? Enumerable.Empty<Client>();
-    }
+    //    return clients ?? Enumerable.Empty<Client>();
+    //}
 
     public IEnumerable<Client> GetHistory() => _history ?? Enumerable.Empty<Client>();
 
@@ -109,15 +109,15 @@ public class QueueService : IQueueService
         _history.Add(client);
     }
 
-    public bool HasClients() => GetClients().Any();
+    //public bool HasClients() => GetClients().Any();
     public bool HasHistory() => _history.Any();
-    public Client? GetPreview()
-    {
-        var clients = GetClients();
-        var type = _policy.CallOrderType(_history, clients.Any(c => c.Type == ClientType.Preferential));
+    //public Client? GetPreview()
+    //{
+    //    var clients = GetClients();
+    //    var type = _policy.CallOrderType(_history, clients.Any(c => c.Type == ClientType.Preferential));
 
-        return type == ClientType.Preferential ? clients.FirstOrDefault(c => c.Type == ClientType.Preferential) : clients.FirstOrDefault();
+    //    return type == ClientType.Preferential ? clients.FirstOrDefault(c => c.Type == ClientType.Preferential) : clients.FirstOrDefault();
 
-    }
+    //}
 
 }

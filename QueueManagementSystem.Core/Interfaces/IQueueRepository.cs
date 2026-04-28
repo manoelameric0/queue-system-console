@@ -9,8 +9,8 @@ namespace QueueManagementSystem.Core.Interfaces;
 
 public interface IQueueRepository
 {
-    void Add(Client client);
-    void Remove(Client client);
-    IEnumerable<Client> GetAll();
-    bool Exists(string name);
+    Task Add(Client client);
+    //void Remove(Client client);
+    //IEnumerable<Client> GetAll();
+    //bool Exists(string name);
 }

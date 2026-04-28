@@ -6,14 +6,14 @@ namespace QueueManagementSystem.Core.Interfaces;
 
 public interface IQueueService
 {
-    void Add(string name, ClientType type);
-    void CallNext();
-    Client? UndoLastCall();
-    IEnumerable<Client> GetClients();
-    IEnumerable<Client> GetHistory();
-    QueueState GetQueueState();
-    bool HasClients();
-    bool HasHistory();
-    Client? GetPreview();
+    Task Add(string name, ClientType type);
+    //void CallNext();
+    //Client? UndoLastCall();
+    //IEnumerable<Client> GetClients();
+    //IEnumerable<Client> GetHistory();
+    //QueueState GetQueueState();
+    //bool HasClients();
+    //bool HasHistory();
+    //Client? GetPreview();
 
 }
