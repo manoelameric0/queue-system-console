@@ -18,10 +18,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // service
-builder.Services.AddSingleton<IQueueService, QueueService>();
+builder.Services.AddScoped<IQueueService, QueueService>();
 
 //Repository
-builder.Services.AddSingleton<IQueueRepository, InMemoryQueueRepository>();
+//builder.Services.AddSingleton<IQueueRepository, InMemoryQueueRepository>();
+builder.Services.AddScoped<IQueueRepository, QueueRepository>();
 builder.Services.AddDbContext<QueueDbContext>(option => option.UseSqlite("Data Source=queue.db"));
 
 //Policy
