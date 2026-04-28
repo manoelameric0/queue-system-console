@@ -29,7 +29,7 @@ public class QueueService : IQueueService
 
         //adiciona todos os clientes no repository
         _repository.Add(new Client
-        (name: name, clientType: type));
+        (Name: name, Type: type));
 
     }
 

@@ -6,37 +6,37 @@ namespace QueueManagementSystem.Core.Models;
 
 public class Client
 {
-    public string Name {get;}
-    public Guid ID {get;}
-    public ClientType Type {get;}
-    public DateTime QueuedAt {get;}
-    public DateTime? CalledAt {get; private set;} 
+    public string Name { get; private set; }
+    public Guid ID {get; private set; }
+    public ClientType Type {get; private set; }
+    public DateTime QueuedAt {get; private set; }
+    public DateTime? CalledAt {get; private set; } 
 
-    public Client(string name,ClientType clientType)
+    public Client(string Name,ClientType Type)
     {
-        if (string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(Name))
         {
             throw new ArgumentException("Nome inválido");
         }
 
-        if (name.Length < 3)
+        if (Name.Length < 3)
         {
             throw new ArgumentException("Nome inválido: mínimo 3 caracteres e sem números.");
         }
 
-        if (name.Any(char.IsDigit))
+        if (Name.Any(char.IsDigit))
         {
             throw new ArgumentException("O nome não pode conter números.");
         }
 
-        if (!Enum.IsDefined(typeof(ClientType), clientType))
+        if (!Enum.IsDefined(typeof(ClientType), Type))
         {
             throw new ArgumentException("Tipo de cliente inválido.");
         }
 
-        Name = name;
+        this.Name = Name;
         ID = Guid.NewGuid();
-        Type = clientType;
+        this.Type = Type;
         QueuedAt = DateTime.Now;
     }
 
