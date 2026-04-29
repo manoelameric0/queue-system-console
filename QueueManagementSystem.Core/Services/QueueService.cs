@@ -22,10 +22,10 @@ public class QueueService : IQueueService
 
     public async Task Add(string name, ClientType type)
     {
-        //if (_repository.Exists(name))
-        //{
-        //    throw new ArgumentException("Cliente já está na Fila");
-        //}
+        if (await _repository.Exists(name))
+        {
+            throw new ArgumentException("Cliente já está na Fila");
+        }
 
         //adiciona todos os clientes no repository
         await _repository.Add(new Client
@@ -65,40 +65,35 @@ public class QueueService : IQueueService
 
     //}
 
-    public Client? UndoLastCall()
+    //public Client? UndoLastCall()
+    //{
+    //    //FINALIZAR O RETORNO DO UNDO PARA APARECER NO MENU!!!
+    //    Client? client = default;
+
+    //    if (_history.Any())
+    //    {
+    //        client = GetHistory().Last();
+
+    //        _repository.Add(client);
+    //        _history.Remove(client);
+
+    //    }
+    //    return client;
+    //}
+
+    public async Task<QueueState> GetQueueState()
     {
-        //FINALIZAR O RETORNO DO UNDO PARA APARECER NO MENU!!!
-        Client? client = default;
+        var clients = await GetClients();
+        var normalClients = clients.Where(c => c.Type == ClientType.Normal);
+        var preferentialClients = clients.Where(c => c.Type == ClientType.Preferential);
+        var history = await GetHistory();
 
-        if (_history.Any())
-        {
-            client = GetHistory().Last();
-
-            _repository.Add(client);
-            _history.Remove(client);
-
-        }
-        return client;
+        return new QueueState(comun: normalClients, prioridade: preferentialClients, history: history);
     }
 
-    //public QueueState GetQueueState()
-    //{
-    //    var clients = GetClients();
-    //    var clientsComum = clients.Where(c => c.Type == ClientType.Normal);
-    //    var clientsPriority = clients.Where(c => c.Type == ClientType.Preferential);
-    //    var history = GetHistory();
+    public async Task<IEnumerable<Client>> GetClients() => await _repository.GetQueue() ?? Enumerable.Empty<Client>();
 
-    //    return new QueueState(comun: clientsComum, prioridade: clientsPriority, history: history);
-    //}
-
-    //public IEnumerable<Client> GetClients()
-    //{
-    //    var clients = _repository.GetAll().OrderBy(c => c.QueuedAt).ToList();
-
-    //    return clients ?? Enumerable.Empty<Client>();
-    //}
-
-    public IEnumerable<Client> GetHistory() => _history ?? Enumerable.Empty<Client>();
+    public async Task<IEnumerable<Client>> GetHistory() => await _repository.GetHistory() ?? Enumerable.Empty<Client>();
 
     public void AddAtHistory(Client client)
     {
@@ -109,8 +104,8 @@ public class QueueService : IQueueService
         _history.Add(client);
     }
 
-    //public bool HasClients() => GetClients().Any();
-    public bool HasHistory() => _history.Any();
+    public async Task<bool> HasClients() => await _repository.HasClients();
+    public async Task<bool> HasHistory() => await _repository.HasHistory();
     //public Client? GetPreview()
     //{
     //    var clients = GetClients();
