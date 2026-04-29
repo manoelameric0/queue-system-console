@@ -9,7 +9,7 @@ namespace QueueManagementSystem.Core.Services;
 
 public class QueueService : IQueueService
 {
-    private readonly List<Client> _history = new();
+    //private readonly List<Client> _history = new();
 
     private readonly IQueueRepository _repository;
     private readonly ICallOrderPolicy _policy;
@@ -33,53 +33,53 @@ public class QueueService : IQueueService
 
     }
 
-    //public void CallNext()
-    //{
-    //    var clients = GetClients();
+    public async Task CallNext()
+    {
+        var clients = await GetClients();
+        var history = await _repository.GetHistory();
 
-    //    if (clients.Any())
-    //    {
-    //        var clientType = _policy.CallOrderType(_history, clients.Any(c => c.Type == ClientType.Preferential));
+        if (clients.Any())
+        {
+            var clientType = _policy.CallOrderType(history, clients.Any(c => c.Type == ClientType.Preferential));
 
-    //        if (clientType == ClientType.Preferential)
-    //        {
-    //            var client = clients.First(c => c.Type == ClientType.Preferential);
+            if (clientType == ClientType.Preferential)
+            {
+                var client = clients.First(c => c.Type == ClientType.Preferential);
 
-    //            client.AddCallTime();
-    //            AddAtHistory(client);
-    //            _repository.Remove(client);
+                client.AddCallTime();
+                AddAtHistory(client);
+                await _repository.Remove(client);
 
-    //            if (_history.Count() > 20) _history.RemoveAt(0);
-    //        }
-    //        else
-    //        {
-    //            var client = clients.First();
+                //    if (history.Count() > 20) history.RemoveAt(0);
+                //}
+                //else
+                //{
+                //    var client = clients.First();
 
-    //            client.AddCallTime();
-    //            AddAtHistory(client);
-    //            _repository.Remove(client);
-    //            if (_history.Count() > 20) _history.RemoveAt(0);
-    //        }
+                //    client.AddCallTime();
+                //    AddAtHistory(client);
+                //    _repository.Remove(client);
+                //    if (history.Count() > 20) history.RemoveAt(0);
+                //}
+            }
+        }
 
-    //    }
+    }
 
-    //}
+    public async Task<Client> UndoLastCall()
+    {
+        var history = await _repository.GetHistory();
 
-    //public Client? UndoLastCall()
-    //{
-    //    //FINALIZAR O RETORNO DO UNDO PARA APARECER NO MENU!!!
-    //    Client? client = default;
+        if (history.Any())
+        {
+            client = GetHistory().Last();
 
-    //    if (_history.Any())
-    //    {
-    //        client = GetHistory().Last();
+            _repository.Add(client);
+            _history.Remove(client);
 
-    //        _repository.Add(client);
-    //        _history.Remove(client);
-
-    //    }
-    //    return client;
-    //}
+        }
+        return client;
+    }
 
     public async Task<QueueState> GetQueueState()
     {
@@ -101,7 +101,6 @@ public class QueueService : IQueueService
         {
             throw new ArgumentException("Falha no Atendimento");
         }
-        _history.Add(client);
     }
 
     public async Task<bool> HasClients() => await _repository.HasClients();
