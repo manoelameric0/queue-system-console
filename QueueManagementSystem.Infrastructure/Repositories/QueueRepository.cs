@@ -28,6 +28,12 @@ namespace QueueManagementSystem.Infrastructure.Repositories
 
         public async Task<IEnumerable<Client>> GetHistory() => await _dbContext.Clients.AsNoTracking().Where(c => c.CalledAt != null).ToListAsync();
 
+        public async Task Remove(Client client)
+        {
+            _dbContext.Clients.Remove(client);
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<bool> Exists(string name) => await _dbContext.Clients.AsNoTracking().AnyAsync(c => c.Name == name);
 
         public async Task<bool> HasHistory() => await _dbContext.Clients.AsNoTracking().AnyAsync(c=> c.CalledAt != null);

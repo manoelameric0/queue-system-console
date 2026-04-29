@@ -10,7 +10,7 @@ namespace QueueManagementSystem.Core.Interfaces;
 public interface IQueueRepository
 {
     Task Add(Client client);
-    //void Remove(Client client);
+    Task Remove(Client client);
     Task<IEnumerable<Client>> GetQueue();
     Task<IEnumerable<Client>> GetHistory();
     Task<bool> Exists(string name);
