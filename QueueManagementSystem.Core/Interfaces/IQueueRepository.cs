@@ -11,6 +11,7 @@ public interface IQueueRepository
 {
     Task Add(Client client);
     //void Remove(Client client);
-    //IEnumerable<Client> GetAll();
-    //bool Exists(string name);
+    Task<List<Client>> GetQueue();
+    Task<List<Client>> GetHistory();
+    Task<bool> Exists(string name);
 }
