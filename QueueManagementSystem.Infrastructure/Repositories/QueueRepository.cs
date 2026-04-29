@@ -24,11 +24,14 @@ namespace QueueManagementSystem.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<Client>> GetQueue() => await _dbContext.Clients.AsNoTracking().Where(c => c.CalledAt == null).ToListAsync();
+        public async Task<IEnumerable<Client>> GetQueue() => await _dbContext.Clients.AsNoTracking().Where(c => c.CalledAt == null).ToListAsync();
 
-        public async Task<List<Client>> GetHistory() => await _dbContext.Clients.AsNoTracking().Where(c => c.CalledAt != null).ToListAsync();
+        public async Task<IEnumerable<Client>> GetHistory() => await _dbContext.Clients.AsNoTracking().Where(c => c.CalledAt != null).ToListAsync();
 
         public async Task<bool> Exists(string name) => await _dbContext.Clients.AsNoTracking().AnyAsync(c => c.Name == name);
+
+        public async Task<bool> HasHistory() => await _dbContext.Clients.AsNoTracking().AnyAsync(c=> c.CalledAt != null);
+        public async Task<bool> HasClients() => await _dbContext.Clients.AsNoTracking().AnyAsync(c => c.CalledAt == null);
 
     }
 }
