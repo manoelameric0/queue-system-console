@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using QueueManagementSystem.Core;
 using QueueManagementSystem.Core.Interfaces;
 using QueueManagementSystem.Core.Models;
@@ -21,6 +22,11 @@ namespace QueueManagementSystem.Infrastructure.Repositories
         {
             await _dbContext.AddAsync(client);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<Client>> GetAll()
+        {
+            return _dbContext.Clients.AsNoTracking().ToList();
         }
 
 
