@@ -50,17 +50,6 @@ public class QueueService : IQueueService
                 AddAtHistory(client);
                 await _repository.Remove(client);
 
-                //    if (history.Count() > 20) history.RemoveAt(0);
-                //}
-                //else
-                //{
-                //    var client = clients.First();
-
-                //    client.AddCallTime();
-                //    AddAtHistory(client);
-                //    _repository.Remove(client);
-                //    if (history.Count() > 20) history.RemoveAt(0);
-                //}
             }
         }
 
@@ -69,16 +58,14 @@ public class QueueService : IQueueService
     public async Task<Client> UndoLastCall()
     {
         var history = await _repository.GetHistory();
+        var client = history.Last();
 
         if (history.Any())
         {
-            client = GetHistory().Last();
-
-            _repository.Add(client);
-            _history.Remove(client);
-
+            client.UndoCall();
+            return client;
         }
-        return client;
+         return client;
     }
 
     public async Task<QueueState> GetQueueState()
@@ -105,13 +92,13 @@ public class QueueService : IQueueService
 
     public async Task<bool> HasClients() => await _repository.HasClients();
     public async Task<bool> HasHistory() => await _repository.HasHistory();
-    //public Client? GetPreview()
-    //{
-    //    var clients = GetClients();
-    //    var type = _policy.CallOrderType(_history, clients.Any(c => c.Type == ClientType.Preferential));
+    public async Task<Client> GetPreview()
+    {
+        var clients = await GetClients();
+        var type = _policy.CallOrderType(await GetHistory(), clients.Any(c => c.Type == ClientType.Preferential));
 
-    //    return type == ClientType.Preferential ? clients.FirstOrDefault(c => c.Type == ClientType.Preferential) : clients.FirstOrDefault();
+        return type == ClientType.Preferential ? clients.FirstOrDefault(c => c.Type == ClientType.Preferential) : clients.FirstOrDefault();
 
-    //}
+    }
 
 }

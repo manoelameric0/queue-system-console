@@ -14,6 +14,6 @@ public interface IQueueService
     Task<QueueState> GetQueueState();
     Task<bool> HasClients();
     Task<bool> HasHistory();
-    //Client? GetPreview();
+    Task<Client> GetPreview();
 
 }
