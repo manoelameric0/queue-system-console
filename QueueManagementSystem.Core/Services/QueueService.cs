@@ -48,8 +48,6 @@ public class QueueService : IQueueService
 
                 client.AddCallTime();
                 AddAtHistory(client);
-                await _repository.Remove(client);
-
             }
         }
 
