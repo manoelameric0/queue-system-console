@@ -16,4 +16,5 @@ public interface IQueueRepository
     Task<bool> Exists(string name);
     Task<bool> HasHistory();
     Task<bool> HasClients();
+    Task SaveChanges();
 }

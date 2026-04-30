@@ -24,9 +24,9 @@ namespace QueueManagementSystem.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Client>> GetQueue() => await _dbContext.Clients.AsNoTracking().Where(c => c.CalledAt == null).OrderBy(c => c.QueuedAt).ToListAsync();
+        public async Task<IEnumerable<Client>> GetQueue() => await _dbContext.Clients.Where(c => c.CalledAt == null).OrderBy(c => c.QueuedAt).ToListAsync();
 
-        public async Task<IEnumerable<Client>> GetHistory() => await _dbContext.Clients.AsNoTracking().Where(c => c.CalledAt != null).OrderBy(c => c.QueuedAt).ToListAsync();
+        public async Task<IEnumerable<Client>> GetHistory() => await _dbContext.Clients.Where(c => c.CalledAt != null).OrderBy(c => c.QueuedAt).ToListAsync();
 
         public async Task Remove(Client client)
         {
@@ -38,6 +38,7 @@ namespace QueueManagementSystem.Infrastructure.Repositories
 
         public async Task<bool> HasHistory() => await _dbContext.Clients.AsNoTracking().AnyAsync(c=> c.CalledAt != null);
         public async Task<bool> HasClients() => await _dbContext.Clients.AsNoTracking().AnyAsync(c => c.CalledAt == null);
+        public async Task SaveChanges() => await _dbContext.SaveChangesAsync();
 
     }
 }
