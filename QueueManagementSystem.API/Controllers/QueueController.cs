@@ -18,65 +18,65 @@ namespace QueueManagementSystem.API.Controllers
         }
 
         [HttpPost("client")]
-        public IActionResult AddClient(CreateClientRequest request)
+        public async Task<IActionResult> AddClient(CreateClientRequest request)
         {
-            _queueService.Add(request.Name, request.Type);
+            await _queueService.Add(request.Name, request.Type);
 
             return Created("",request);
         }
 
-        //[HttpPost("call-next")]
-        //public IActionResult CallNext()
-        //{
-        //    // caso a fila esteja vazia 204
-        //    if (!_queueService.HasClients())
-        //    {
-        //        return NoContent();
-        //    }
+        [HttpPost("call-next")]
+        public async Task<IActionResult> CallNext()
+        {
+            // caso a fila esteja vazia 204
+            if (!await _queueService.HasClients())
+            {
+                return NoContent();
+            }
 
-        //    _queueService.CallNext();
-        //    return Ok();
+            await _queueService.CallNext();
+            return Ok();
 
-            
-        //}
 
-        //[HttpGet("get-queue-state")]
-        //public IActionResult GetQueueState()
-        //{
-        //    var queueState = _queueService.GetQueueState();
+        }
 
-        //    if (!queueState.HasClients())
-        //    {
-        //        return NoContent();
-        //    }
+        [HttpGet("get-queue-state")]
+        public async Task<IActionResult> GetQueueState()
+        {
+            var queueState = await _queueService.GetQueueState();
 
-        //    var response = new QueueStateResponse
-        //    {
-        //        NormalQueue = queueState.Comun.Select(ClientMapper.MapClient),
-        //        PreferentialQueue = queueState.Prioridade.Select(ClientMapper.MapClient),
-        //        History = queueState.History.Select(ClientMapper.MapClient)
-        //    };
+            if (!queueState.HasClients())
+            {
+                return NoContent();
+            }
 
-        //    return Ok(response);
-        //}
+            var response = new QueueStateResponse
+            {
+                NormalQueue = queueState.Comun.Select(ClientMapper.MapClient),
+                PreferentialQueue = queueState.Prioridade.Select(ClientMapper.MapClient),
+                History = queueState.History.Select(ClientMapper.MapClient)
+            };
 
-        //[HttpPost("undo")]
-        //public IActionResult UndoLastCall()
-        //{
-        //    var client = _queueService.UndoLastCall();
+            return Ok(response);
+        }
 
-        //    if (client == null)  return NoContent();
+        [HttpPost("undo")]
+        public async Task<IActionResult> UndoLastCall()
+        {
+            var client = await _queueService.UndoLastCall();
 
-        //    var response = new ClientResponse
-        //    {
-        //        Name = client.Name,
-        //        Type = client.Type.ToString(),
-        //        QueuedAt = client.QueuedAt,
-        //        CalledAt = client.CalledAt,
-        //    };
+            if (client == null) return NoContent();
 
-        //    return Ok(response);
-        //}
+            var response = new ClientResponse
+            {
+                Name = client.Name,
+                Type = client.Type.ToString(),
+                QueuedAt = client.QueuedAt,
+                CalledAt = client.CalledAt,
+            };
+
+            return Ok(response);
+        }
 
     }
 
