@@ -47,7 +47,13 @@ public class QueueService : IQueueService
                 var client = clients.First(c => c.Type == ClientType.Preferential);
 
                 client.AddCallTime();
-                AddAtHistory(client);
+                await AddAtHistory(client);
+            }
+            else
+            {
+                var client = clients.First();
+                client.AddCallTime();
+                await AddAtHistory(client);
             }
         }
 
@@ -61,6 +67,7 @@ public class QueueService : IQueueService
         if (history.Any())
         {
             client.UndoCall();
+            await _repository.SaveChanges();
             return client;
         }
          return client;
@@ -80,12 +87,14 @@ public class QueueService : IQueueService
 
     public async Task<IEnumerable<Client>> GetHistory() => await _repository.GetHistory() ?? Enumerable.Empty<Client>();
 
-    public void AddAtHistory(Client client)
+    public async Task AddAtHistory(Client client)
     {
         if (client.CalledAt == null)
         {
             throw new ArgumentException("Falha no Atendimento");
         }
+
+        await _repository.SaveChanges();
     }
 
     public async Task<bool> HasClients() => await _repository.HasClients();
