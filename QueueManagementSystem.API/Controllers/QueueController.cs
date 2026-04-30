@@ -45,10 +45,7 @@ namespace QueueManagementSystem.API.Controllers
         {
             var queueState = await _queueService.GetQueueState();
 
-            if (!queueState.HasClients())
-            {
-                return NoContent();
-            }
+            if (!queueState.HasClients()) return NoContent();
 
             var response = new QueueStateResponse
             {
@@ -63,10 +60,11 @@ namespace QueueManagementSystem.API.Controllers
         [HttpPost("undo")]
         public async Task<IActionResult> UndoLastCall()
         {
+            
+            var hasOrNo = await _queueService.HasHistory();
+            if (!hasOrNo) return NoContent();
+
             var client = await _queueService.UndoLastCall();
-
-            if (client == null) return NoContent();
-
             var response = new ClientResponse
             {
                 Name = client.Name,
