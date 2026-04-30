@@ -44,4 +44,9 @@ public class Client
     {
         CalledAt = DateTime.Now;
     }
+
+    public void UndoCall()
+    {
+        CalledAt = null;
+    }
 }
