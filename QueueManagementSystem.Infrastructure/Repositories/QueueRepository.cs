@@ -26,7 +26,7 @@ namespace QueueManagementSystem.Infrastructure.Repositories
 
         public async Task<IEnumerable<Client>> GetQueue() => await _dbContext.Clients.Where(c => c.CalledAt == null).OrderBy(c => c.QueuedAt).ToListAsync();
 
-        public async Task<IEnumerable<Client>> GetHistory() => await _dbContext.Clients.Where(c => c.CalledAt != null).OrderBy(c => c.QueuedAt).ToListAsync();
+        public async Task<IEnumerable<Client>> GetHistory() => await _dbContext.Clients.Where(c => c.CalledAt != null).OrderByDescending(c => c.QueuedAt).ToListAsync();
 
         public async Task Remove(Client client)
         {
