@@ -1,68 +1,68 @@
 using System;
-using QueueManagementSystem.Console.Enums;
-using QueueManagementSystem.Console.Policies;
-using QueueManagementSystem.Console.Models;
-using QueueManagementSystem.Console.Repositories;
-using QueueManagementSystem.Console.Services;
+using QueueManagementSystem.Core.Enums;
+using QueueManagementSystem.Core.Policies;
+using QueueManagementSystem.Core.Models;
+using QueueManagementSystem.Infrastructure.Repositories;
+using QueueManagementSystem.Core.Services;
 
 namespace QueueManagementSystem.Tests;
 
 public class InMemoryQueueRepositoryTest
-{   
+{
     private readonly InMemoryQueueRepository _repository = new();
 
     [Fact]
-    public void Add_WhenCalled_ClientAppearsInGetAll()
+    public async Task Add_WhenCalled_ClientAppearsInGetAll()
     {
         // Arrange
-        var client = new Client("Manoel", ClientType.Prioridade);
+        var client = new Client("Manoel", ClientType.Preferential);
 
         // Act
         _repository.Add(client);
-        var clients = _repository.GetAll();
+        var clients = await _repository.GetQueue();
 
         // Assert
         Assert.Contains(clients, c => c.Name == "Manoel");
     }
 
     [Fact]
-    public void Remove_WhenClientExists_ClientDisappearsFromGetAll()
+    public async Task Remove_WhenClientExists_ClientDisappearsFromGetAll()
     {
         // Arrange
-        var client = new Client("Manoel", ClientType.Prioridade);
-        _repository.Add(client);
+        var client = new Client("Manoel", ClientType.Preferential);
+        await _repository.Add(client);
 
         // Act
-        _repository.Remove(client);
-        var clients = _repository.GetAll();
+        await _repository.Remove(client);
+        var clients = await _repository.GetQueue();
 
         // Assert
         Assert.DoesNotContain(clients, c => c.Name == "Manoel");
     }
 
     [Fact]
-    public void Exists_WhenClientAdded_ReturnsTrue()
+    public async Task Exists_WhenClientAdded_ReturnsTrue()
     {
         // Arrange
-        var client = new Client("Manoel", ClientType.Prioridade);
-        _repository.Add(client);
+        var client = new Client("Manoel", ClientType.Preferential);
+        await _repository.Add(client);
 
         // Act
-        var exist = _repository.Exists("Manoel");
+        var exist = await _repository.Exists("Manoel");
 
         // Assert
         Assert.True(exist);
     }
 
     [Fact]
-    public void Exists_WithDifferentCasing_ReturnsTrue()
+    public async Task Exists_WithDifferentCasing_ReturnsTrue()
     {
         // Arrange
-        var client = new Client("MANOEL", ClientType.Prioridade);
-        _repository.Add(client);
+        var client = new Client("MANOEL", ClientType.Preferential);
+        await _repository.Add(client);
 
         // Act
-        var exist = _repository.Exists("manoel");
+        var exist = await _repository.Exists("manoel");
 
         // Assert
         Assert.True(exist);

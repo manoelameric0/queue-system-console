@@ -1,10 +1,10 @@
 using System;
 using System.Net.Http.Headers;
-using QueueManagementSystem.Console.Enums;
-using QueueManagementSystem.Console.Policies;
-using QueueManagementSystem.Console.Services;
-using QueueManagementSystem.Console.Repositories;
-using QueueManagementSystem.Console.Models;
+using QueueManagementSystem.Core.Enums;
+using QueueManagementSystem.Core.Policies;
+using QueueManagementSystem.Core.Services;
+using QueueManagementSystem.Core.Interfaces;
+using QueueManagementSystem.Core.Models;
 
 namespace QueueManagementSystem.Tests;
 
@@ -17,15 +17,15 @@ public class CallOrderPolicyTest
     {
         // Arrange
         var history = new List<Client>();
-        history.Add(new Client("Manoel", ClientType.Comum));
-        history.Add(new Client("Andryelle", ClientType.Comum));
-        history.Add(new Client("Madry", ClientType.Comum));
+        history.Add(new Client("Manoel", ClientType.Normal));
+        history.Add(new Client("Andryelle", ClientType.Normal));
+        history.Add(new Client("Madry", ClientType.Normal));
 
         // Act
         var resultado = _policy.CallOrderType(history, true);
 
         // Assert
-        Assert.Equal(ClientType.Prioridade, resultado);
+        Assert.Equal(ClientType.Preferential, resultado);
     }
 
     [Fact]
@@ -33,15 +33,15 @@ public class CallOrderPolicyTest
     {
         // Arrange
         var history = new List<Client>();
-        history.Add(new Client("Manoel", ClientType.Comum));
-        history.Add(new Client("Andryelle", ClientType.Comum));
-        history.Add(new Client("Madry", ClientType.Comum));
+        history.Add(new Client("Manoel", ClientType.Normal));
+        history.Add(new Client("Andryelle", ClientType.Normal));
+        history.Add(new Client("Madry", ClientType.Normal));
 
         // Act
         var resultado = _policy.CallOrderType(history, false);
 
         // Assert
-        Assert.Equal(ClientType.Comum, resultado);
+        Assert.Equal(ClientType.Normal, resultado);
     }
 
     [Fact]
@@ -50,14 +50,14 @@ public class CallOrderPolicyTest
     {
         // Arrange
         var history = new List<Client>();
-        history.Add(new Client("Manoel", ClientType.Comum));
-        history.Add(new Client("Andryelle", ClientType.Prioridade));
+        history.Add(new Client("Manoel", ClientType.Normal));
+        history.Add(new Client("Andryelle", ClientType.Preferential));
 
         // Act
         var resultado = _policy.CallOrderType(history, true);
 
         // Assert
-        Assert.Equal(ClientType.Comum, resultado);
+        Assert.Equal(ClientType.Normal, resultado);
     }
 
     [Fact]
@@ -66,15 +66,15 @@ public class CallOrderPolicyTest
     {
         // Arrange
         var history = new List<Client>();
-        history.Add(new Client("Manoel", ClientType.Comum));
-        history.Add(new Client("Manoelle", ClientType.Comum));
-        history.Add(new Client("Andryelle", ClientType.Prioridade));
+        history.Add(new Client("Manoel", ClientType.Normal));
+        history.Add(new Client("Manoelle", ClientType.Normal));
+        history.Add(new Client("Andryelle", ClientType.Preferential));
 
         // Act
         var resultado = _policy.CallOrderType(history, true);
 
         // Assert
-        Assert.Equal(ClientType.Comum, resultado);
+        Assert.Equal(ClientType.Normal, resultado);
     }
 
     [Fact]
@@ -88,7 +88,7 @@ public class CallOrderPolicyTest
         var resultado = _policy.CallOrderType(history, true);
 
         // Assert
-        Assert.Equal(ClientType.Comum, resultado);
+        Assert.Equal(ClientType.Normal, resultado);
     }
 
 }

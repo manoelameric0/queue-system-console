@@ -1,9 +1,6 @@
 using System;
-using QueueManagementSystem.Console.Services;
-using QueueManagementSystem.Console.Enums;
-using QueueManagementSystem.Console.Repositories;
-using QueueManagementSystem.Console.Policies;
-using QueueManagementSystem.Console.Models;
+using QueueManagementSystem.Core.Enums;
+using QueueManagementSystem.Core.Models;
 using Microsoft.VisualBasic;
 
 namespace QueueManagementSystem.Tests;
@@ -16,11 +13,11 @@ public class ClientTests
         // Arrange
 
         // Act
-        var client = new Client("Manoel", ClientType.Comum);
+        var client = new Client("Manoel", ClientType.Normal);
 
         // Assert
         Assert.Equal("Manoel", client.Name);
-        Assert.Equal(ClientType.Comum, client.ClientType);
+        Assert.Equal(ClientType.Normal, client.Type);
         Assert.NotEqual(Guid.Empty, client.ID);
     }
 
@@ -30,7 +27,7 @@ public class ClientTests
         // Arrange
 
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => new Client("", ClientType.Comum));
+        var exception = Assert.Throws<ArgumentException>(() => new Client("", ClientType.Normal));
 
         // Assert
         Assert.Equal("Nome inválido", exception.Message);
@@ -42,7 +39,7 @@ public class ClientTests
         // Arrange
 
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => new Client("ma", ClientType.Comum));
+        var exception = Assert.Throws<ArgumentException>(() => new Client("ma", ClientType.Normal));
 
         // Assert
         Assert.Equal("Nome inválido: mínimo 3 caracteres e sem números.", exception.Message);
@@ -54,7 +51,7 @@ public class ClientTests
         // Arrange
 
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => new Client("Manoel123", ClientType.Comum));
+        var exception = Assert.Throws<ArgumentException>(() => new Client("Manoel123", ClientType.Normal));
 
         // Assert
         Assert.Equal("O nome não pode conter números.", exception.Message);
@@ -78,10 +75,10 @@ public class ClientTests
         // Arrange
 
         // Act
-        var client = new Client("Manoel", ClientType.Comum);
+        var client = new Client("Manoel", ClientType.Normal);
 
         // Assert
-        Assert.NotEqual(client.EnQueueTime, DateTime.Now);
+        Assert.NotEqual(client.QueuedAt, DateTime.Now);
     }
 
     
