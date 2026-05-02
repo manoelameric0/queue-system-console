@@ -8,7 +8,7 @@ public interface IQueueService
 {
     Task Add(string name, ClientType type);
     Task CallNext();
-    Task<Client> UndoLastCall();
+    Task<Client>? UndoLastCall();
     Task<IEnumerable<Client>> GetClients();
     Task<IEnumerable<Client>> GetHistory();
     Task<QueueState> GetQueueState();

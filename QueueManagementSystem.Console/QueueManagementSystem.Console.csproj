@@ -8,10 +8,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Enums\" />
-    <Folder Include="Models\" />
-    <Folder Include="Repositories\" />
-    <Folder Include="Services\" />
+    <Compile Remove="Enums\**" />
+    <Compile Remove="Models\**" />
+    <Compile Remove="Repositories\**" />
+    <Compile Remove="Services\**" />
+    <EmbeddedResource Remove="Enums\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <EmbeddedResource Remove="Repositories\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="Enums\**" />
+    <None Remove="Models\**" />
+    <None Remove="Repositories\**" />
+    <None Remove="Services\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="UI\" />
   </ItemGroup>
 

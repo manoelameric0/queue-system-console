@@ -59,10 +59,10 @@ public class QueueService : IQueueService
 
     }
 
-    public async Task<Client> UndoLastCall()
+    public async Task<Client>? UndoLastCall()
     {
         var history = await _repository.GetHistory();
-        var client = history.First();
+        var client = history.FirstOrDefault();
 
         if (history.Any())
         {
