@@ -16,7 +16,7 @@ public class Menu
         _service = service;
         _policy = policy;
     }
-    public void Executar()
+    public async Task Executar()
     {
 
         while (true)
@@ -28,7 +28,7 @@ public class Menu
             System.Console.WriteLine("========================================");
             System.Console.WriteLine("");
 
-            var client = _service.GetPreview();
+            var client = await _service.GetPreview();
             System.Console.WriteLine(client != null ? $"[ Client atual: {client.Name} ({client.Type}) | Hora de chegada: {client.QueuedAt:HH:mm:ss} ]" : "[ Nenhum cliente em atendimento ]");
 
             System.Console.WriteLine("");
@@ -137,9 +137,9 @@ public class Menu
         System.Console.ReadKey();
     }
 
-    public void CallNext()
+    public async Task CallNext()
     {
-        if (!_service.HasClients())
+        if (!await _service.HasClients())
         {
             ShowError("\nNenhum Cliente em Espera!");
             System.Console.WriteLine("\n----------------------------------------");
@@ -147,12 +147,12 @@ public class Menu
             System.Console.ReadKey();
             return;
         }
-        _service.CallNext();
+       await _service.CallNext();
     }
 
-    public void UndoLastCall()
+    public async Task UndoLastCall()
     {
-        if (!_service.HasHistory())
+        if (!await _service.HasHistory())
         {
             ShowError("\nNenhum Cliente Atendido até o momento!");
             System.Console.WriteLine("\n----------------------------------------");
@@ -161,7 +161,7 @@ public class Menu
             return;
         }
 
-        var client = _service.UndoLastCall();
+        var client = await _service.UndoLastCall();
         ShowSuccess($"{client!.Name} de volta a fila.");
         System.Console.WriteLine("\n----------------------------------------");
         System.Console.Write("Pressione [Qualquer Tecla] para voltar");
@@ -169,7 +169,7 @@ public class Menu
 
     }
 
-    public void DisplayHistoryClients()
+    public async Task DisplayHistoryClients()
     {
         System.Console.Clear();
         System.Console.WriteLine("========================================");
@@ -177,24 +177,24 @@ public class Menu
         System.Console.WriteLine("========================================");
         System.Console.WriteLine("");
 
-        var queueState = _service.GetQueueState();
+        var queueState = await _service.GetQueueState();
 
         if (!queueState.HasClients() && !queueState.History.Any()) ShowInfo("Nenhum Cliente Atendido até o Momento");
 
 
-        if (queueState.Comun.Any())
+        if (queueState.Normal.Any())
         {
             ShowInfo("\nFila Comum:");
-            foreach (var client in queueState.Comun)
+            foreach (var client in queueState.Normal)
             {
                 System.Console.WriteLine($"- {client.Name} | Horario de Chegada: {client.QueuedAt:HH:mm:ss}");
             }
         }
 
-        if (queueState.Prioridade.Any())
+        if (queueState.Preferential.Any())
         {
             ShowInfo("\nFila Preferencial:");
-            foreach (var client in queueState.Prioridade)
+            foreach (var client in queueState.Preferential)
             {
                 System.Console.WriteLine($"- {client.Name} | Horario de Chegada: {client.QueuedAt:HH:mm:ss}");
             }
