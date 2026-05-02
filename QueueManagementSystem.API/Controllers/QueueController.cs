@@ -49,8 +49,8 @@ namespace QueueManagementSystem.API.Controllers
 
             var response = new QueueStateResponse
             {
-                NormalQueue = queueState.Comun.Select(ClientMapper.MapClient),
-                PreferentialQueue = queueState.Prioridade.Select(ClientMapper.MapClient),
+                NormalQueue = queueState.Normal.Select(ClientMapper.MapClient),
+                PreferentialQueue = queueState.Preferential.Select(ClientMapper.MapClient),
                 History = queueState.History.Select(ClientMapper.MapClient)
             };
 
