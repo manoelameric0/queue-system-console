@@ -19,7 +19,7 @@ public class InMemoryQueueRepository : IQueueRepository
     public async Task<IEnumerable<Client>> GetQueue()
      => _clientQueue.Where(c => c.CalledAt == null).OrderBy(c => c.QueuedAt).ToList() ?? Enumerable.Empty<Client>();
     public async Task<IEnumerable<Client>> GetHistory()
-    => _clientQueue.Where(c => c.CalledAt != null).OrderBy(c => c.QueuedAt).ToList() ?? Enumerable.Empty<Client>();
+    => _clientQueue.Where(c => c.CalledAt != null).OrderBy(c => c.CalledAt).ToList() ?? Enumerable.Empty<Client>();
 
     public async Task<bool> Exists(string name) => _clientQueue.Any(c => string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase));
 
