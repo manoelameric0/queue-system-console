@@ -6,5 +6,5 @@ namespace QueueManagementSystem.Core.Interfaces;
 
 public interface ICallOrderPolicy
 {
-    public ClientType CallOrderType(IEnumerable<Client> clients, bool havePriority);
+    public Task<ClientType> CallOrderType(IEnumerable<Client> clients, bool havePriority);
 }
