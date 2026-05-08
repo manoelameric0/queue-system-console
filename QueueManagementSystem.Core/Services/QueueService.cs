@@ -40,7 +40,7 @@ public class QueueService : IQueueService
 
         if (clients.Any())
         {
-            var clientType = _policy.CallOrderType(history, clients.Any(c => c.Type == ClientType.Preferential));
+            var clientType = await _policy.CallOrderType(history, clients.Any(c => c.Type == ClientType.Preferential));
 
             if (clientType == ClientType.Preferential)
             {
@@ -107,7 +107,7 @@ public class QueueService : IQueueService
     public async Task<Client> GetPreview()
     {
         var clients = await GetClients();
-        var type = _policy.CallOrderType(await GetHistory(), clients.Any(c => c.Type == ClientType.Preferential));
+        var type = await _policy.CallOrderType(await GetHistory(), clients.Any(c => c.Type == ClientType.Preferential));
 
         return type == ClientType.Preferential ? clients.FirstOrDefault(c => c.Type == ClientType.Preferential) : clients.FirstOrDefault();
 
